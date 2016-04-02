@@ -17,6 +17,13 @@
   },
   "homepage": "https://github.com/SimonTart/Product-Manage-System#readme",
   "devDependencies": {
-    "express": "^4.13.4"
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4",
+    "express": "^4.13.4",
+    "material-ui": "^0.15.0-alpha.2",
+    "react": "^0.14.8",
+    "react-dom": "^0.14.8",
+    "react-tap-event-plugin": "^0.2.2",
+    "webpack": "^1.12.14"
   }
 }

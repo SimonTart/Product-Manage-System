@@ -1,3 +1,0 @@
-```javascript
-this is test
-```
