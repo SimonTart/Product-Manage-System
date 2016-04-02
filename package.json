@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "webpack -w-d --color--profile"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-tap-event-plugin": "^0.2.2",
+    "transfer-webpack-plugin": "^0.1.4",
     "webpack": "^1.12.14"
   }
 }
