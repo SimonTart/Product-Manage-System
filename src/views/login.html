@@ -4,13 +4,43 @@
 	<meta charset="UTF-8">
 	<title>户外用品管理系统登陆界面</title>
 	<style type="text/css">
-		body{
-			font-family: sans-serif;
-		}
+		input:-webkit-autofill {
+			-webkit-box-shadow: 0 0 0 1000px white inset;
+		 }
+		 html,body{
+		 	height: 100%;
+		 }
+		 #app{
+		 	text-align: center;
+		 	position: relative;
+		 	top: 50%;
+		 	transform: translateY(-50%);
+		 }
+		 /*#app{
+			 font-family: "Microsoft YaHei",Arial,Helvetica,sans-serif !important;
+		 }
+		 input[type=password]{
+		 	font-family: Arial, Helvetica, sans-serif !important;
+		 }*/
 	</style>
 </head>
 <body>
 	<div id="app"></div>
-	<script type="text/javascript" src="../scripts/app.js"></script>
+	<script>
+    var WebFontConfig = {
+      google: { families: [ 'Roboto:400,300,500:latin' ] }
+    };
+    (function() {
+      var wf = document.createElement('script');
+      wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+      wf.type = 'text/javascript';
+      wf.async = 'true';
+      var s = document.getElementsByTagName('script')[0];
+      s.parentNode.insertBefore(wf, s);
+    })();
+
+  </script>
+	<script type="text/javascript" src="../scripts/login.js"></script>
 </body>
 </html>

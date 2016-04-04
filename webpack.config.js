@@ -8,22 +8,21 @@ var outputPath = path.resolve(__dirname,"dist");
 var srcPath = path.resolve(__dirname,"src");
 
 module.exports = {
-	entry: [
-    'webpack/hot/dev-server',
-    'webpack/hot/only-dev-server',
-    path.join(srcPath,"scripts/app.js")
-  ],
+	entry: {
+		login: path.join(srcPath,"scripts/login.js"),
+		app: path.join(srcPath,"scripts/app.js")
+	},
 	output: {
 		path: path.join(outputPath,"scripts"),
-		filename: "app.js"
+		filename: "[name].js"
 	},
 	module: {
 	  loaders: [
-	  	{
-	      test: /\.js$/,
-	      exclude: [nodeModulePath],
-	      loader: "react-hot"
-	    },
+	  	// {
+	   //    test: /\.js$/,
+	   //    exclude: [nodeModulePath],
+	   //    loader: "react-hot"
+	   //  },
 	    {
 	      test: /\.js$/,
 	      exclude: [nodeModulePath],
