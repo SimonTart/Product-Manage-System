@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "webpack -w-d --colors--profile--display-modules"
+    "test": "webpack -w-d --colors --profile --progress --display-modules"
   },
   "repository": {
     "type": "git",

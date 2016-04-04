@@ -5,7 +5,7 @@ import IconButton from "material-ui/lib/icon-button";
 
 
 const LoginBtnStyle = {
-	width: "220px",
+	width: "240px",
 
 };
 

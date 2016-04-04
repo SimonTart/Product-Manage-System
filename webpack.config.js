@@ -8,18 +8,26 @@ var outputPath = path.resolve(__dirname,"dist");
 var srcPath = path.resolve(__dirname,"src");
 
 module.exports = {
-	entry: path.join(srcPath,"scripts/app.js"),
+	entry: [
+    'webpack/hot/dev-server',
+    'webpack/hot/only-dev-server',
+    path.join(srcPath,"scripts/app.js")
+  ],
 	output: {
 		path: path.join(outputPath,"scripts"),
 		filename: "app.js"
 	},
 	module: {
 	  loaders: [
-
+	  	{
+	      test: /\.js$/,
+	      exclude: [nodeModulePath],
+	      loader: "react-hot"
+	    },
 	    {
 	      test: /\.js$/,
 	      exclude: [nodeModulePath],
-	      loader: ["babel"],
+	      loader: "babel",
 	      query:{
 	      	presets:["react","es2015"]
 	      }
@@ -27,18 +35,18 @@ module.exports = {
 	  ]
 	},
 	plugins:[
-		new webpack.optimize.UglifyJsPlugin({
-			compress: {
-				warnings: false
-			}
-		}),
+		new webpack.HotModuleReplacementPlugin(),
+		// new webpack.optimize.UglifyJsPlugin({
+		// 	compress: {
+		// 		warnings: false
+		// 	}
+		// }),
 		new TransferWebpackPlugin([
 			{
 				from: "src/views",
 				to: "../../dist/views"
 			}
 		]),
-		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
 		new BrowserSyncPlugin({
 			host: "localhost",
