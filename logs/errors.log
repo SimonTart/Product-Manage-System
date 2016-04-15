@@ -1,0 +1,28 @@
+[2016-04-15 11:47:38.044] [ERROR] console - { [MongoError: connect ECONNREFUSED 127.0.0.1:27010]
+  name: 'MongoError',
+  message: 'connect ECONNREFUSED 127.0.0.1:27010' }
+Error: connect ECONNREFUSED 127.0.0.1:27010
+    at Object.exports._errnoException (util.js:870:11)
+    at exports._exceptionWithHostPort (util.js:893:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1061:14)
+[2016-04-15 11:49:32.538] [ERROR] console - { [MongoError: connect ECONNREFUSED 127.0.0.1:27010]
+  name: 'MongoError',
+  message: 'connect ECONNREFUSED 127.0.0.1:27010' }
+Error: connect ECONNREFUSED 127.0.0.1:27010
+    at Object.exports._errnoException (util.js:870:11)
+    at exports._exceptionWithHostPort (util.js:893:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1061:14)
+[2016-04-15 11:50:07.906] [ERROR] console - { [MongoError: connect ECONNREFUSED 127.0.0.1:27010]
+  name: 'MongoError',
+  message: 'connect ECONNREFUSED 127.0.0.1:27010' }
+Error: connect ECONNREFUSED 127.0.0.1:27010
+    at Object.exports._errnoException (util.js:870:11)
+    at exports._exceptionWithHostPort (util.js:893:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1061:14)
+[2016-04-15 14:16:20.107] [ERROR] console - { [MongoError: connect ECONNREFUSED 127.0.0.1:27010]
+  name: 'MongoError',
+  message: 'connect ECONNREFUSED 127.0.0.1:27010' }
+Error: connect ECONNREFUSED 127.0.0.1:27010
+    at Object.exports._errnoException (util.js:870:11)
+    at exports._exceptionWithHostPort (util.js:893:20)
+    at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1061:14)

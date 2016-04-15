@@ -1,0 +1,84 @@
+body {
+    margin: 0;
+    background: #fbfbfb;
+    font-family: 'Microsoft YaHei', Arial, Helvetica, sans-serif;
+    color: #000;
+}
+
+body,
+html {
+    height: 100%;
+    min-height: 100%;
+}
+
+.login-box {
+    width: 290px;
+    position: absolute;
+    left: 50%;
+    margin-left: -145px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.login-tip {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 500;
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+
+.area {
+    position: relative;
+    margin-bottom: 18px;
+}
+
+.area>input {
+    height: 38px;
+    line-height: 38px;
+    outline: none;
+    border-radius: 1px;
+    border: 1px solid #bbb;
+    width: 288px;
+    box-sizing: border-box;
+    font-size: 14px;
+    padding: 0px 0px 0px 32px;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #000;
+    background: #FAFFBD;
+}
+
+.area>input:focus,
+.area>input:focus:hover {
+    outline: none;
+    border: 1px solid #08c;
+}
+
+.area>.icon {
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: 9px;
+    left: 9px;
+}
+
+.area>.icon-user {
+    background: url('/img/login/user.png') no-repeat center;
+    background-size: 37px auto;
+}
+
+.area>.icon-pwd {
+    background: url('/img/login/iconfont-pwd.png') no-repeat center;
+    background-size: 25px auto;
+}
+
+.area>.btn-login {
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    color: #fff;
+    display: block;
+    width: 290px;
+    background: #67bdcd;
+    text-decoration: none;
+}
