@@ -48,6 +48,14 @@ html {
     background: #FAFFBD;
 }
 
+.area>input.success {
+    border: 1px solid #468847;
+}
+
+.area>input.error {
+    border: 1px solid #c00;
+}
+
 .area>input:focus,
 .area>input:focus:hover {
     outline: none;
@@ -70,6 +78,19 @@ html {
 .area>.icon-pwd {
     background: url('/img/login/iconfont-pwd.png') no-repeat center;
     background-size: 25px auto;
+}
+
+.area>.check-tip {
+    position: absolute;
+    left: 100%;
+    top: 0;
+    line-height: 38px;
+    min-width: 200px;
+    padding-left: 23px;
+    background: url('/img/login/rico_error.png') no-repeat 7px center;
+    font-size: 12px;
+    color: #ff5959;
+    display: block;
 }
 
 .area>.btn-login {
