@@ -53,7 +53,7 @@ gulp.task('node-supervisor', function() {
 gulp.task('watch', function() {
     gulp.watch('src/js/**/*.js', ['jsx-changed', 'bs-reload']);
     gulp.watch('src/css/**/*.css', ['css-changed', 'bs-reload']);
-
+     gulp.watch('app/views/**/*..html', ['bs-reload']);
 });
 
 gulp.task('default', ['jsx', 'node-supervisor', 'browser-sync', 'watch']);

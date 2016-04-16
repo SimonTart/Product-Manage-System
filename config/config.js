@@ -8,3 +8,4 @@ const mongodb = {
 
 exports.mongodb = 'mongodb://' + mongodb.host + ':' + mongodb.port + '/' + mongodb.db;
 exports.root = path.join(__dirname, '../');
+exports.passwordSecret = "product";

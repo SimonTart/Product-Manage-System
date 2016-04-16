@@ -21,19 +21,46 @@
             }
             return '';
         },
-        validatePassword: function(password){
-        	var passwordLen = password.length;
-        	if(passwordLen < 5 || passwordLen >15){
-        		return '密码长度应在5-15个字符之间'；
-        	}
-        	return '';
+        validatePassword: function(password) {
+            var passwordLen = password.length;
+            if (passwordLen < 5 || passwordLen > 15) {
+                return '密码长度应在5-15个字符之间';
+            }
+            return '';
+        },
+        checkAccount: function() {
+        	var accountInput = $('account');
+            var account = accountInput.value;
+            var result = this.validateAccount(account);
+            this.setTips('account-tip', result);
+            if (result === '') {
+                accountInput.className = 'success';
+                return true;
+            } else {
+                accountInput.className = 'error';
+                return false;
+            }
+        },
+        checkPassword: function(){
+        	var passwordInput = $('password');
+        	var password = passwordInput.value;
+        	var result = this.validatePassword(password);
+        	this.setTips('pwd-tip', result);
+        	if (result === '') {
+                passwordInput.className = 'success';
+                return true;
+            } else {
+                passwordInput.className = 'error';
+                return false;
+            }
         },
         setTips: function(id, tip) {
-        	$(id).innerText = tip;
+            var tipDom = $(id);
+            tipDom.innerText = tip;
         }
     };
 
-    var accountInput = $('account');
+
     //输入时检查
     // $on(accountInput, 'keydown change blur keyup', function() {
     //     var account = accountInput.value;
@@ -41,13 +68,10 @@
     //         accountInput.value = account.replace(/[^a-zA-Z0-9]/g, '');
     //     }
     // });
+    var accountInput = $('account');
+    accountInput.addEventListener('blur', login.checkAccount.bind(login));
 
-    accountInput.addEventListener('blur', function() {
-        var account = accountInput.value;
-        var result = login.validateAccount(account);
-        login.setTips('account-tip', result);
-    });
-
-    var passwordINput
+    var passwordInput = $('password');
+    passwordInput.addEventListener('blur', login.checkPassword.bind(login));
 
 })();
