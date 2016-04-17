@@ -2,6 +2,6 @@
 
 module.exports = function(app) {
     app.use('/login', function(req, res) {
-        res.render('login');
+        res.render('login.html');
     });
 };

@@ -15,7 +15,7 @@ router.post('/', function(req, res) {
     if (!login.account || !login.password) {
         res.json({
             statusCode: -1,
-            message: '参数缺失'
+            message: '用户名或密码为空'
         });
         return;
     }
@@ -23,6 +23,13 @@ router.post('/', function(req, res) {
     User.findOne({ account: login.account })
         .exec()
         .then(function(user) {
+        	if(user === null){
+        		res.json({
+                    statusCode: 1,
+                    message: '用户名或密码错误'
+                });
+                return;
+        	}
             if (user.password === login.hashPassword) {
                 req.session.l = 1;
                 res.json({
@@ -30,13 +37,14 @@ router.post('/', function(req, res) {
                     message: '登录成功'
                 });
             } else {
+            	console.log(2);
                 res.json({
                     statusCode: 1,
                     message: '用户名或密码错误'
                 });
             }
         }, function(err) {
-            console.error(err);
+            console.log(err);
             res.json({
                 statusCode: 1,
                 message: '用户名或密码错误'

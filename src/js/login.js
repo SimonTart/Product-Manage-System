@@ -29,7 +29,7 @@
             return '';
         },
         checkAccount: function() {
-        	var accountInput = $('account');
+            var accountInput = $('account');
             var account = accountInput.value;
             var result = this.validateAccount(account);
             this.setTips('account-tip', result);
@@ -41,12 +41,12 @@
                 return false;
             }
         },
-        checkPassword: function(){
-        	var passwordInput = $('password');
-        	var password = passwordInput.value;
-        	var result = this.validatePassword(password);
-        	this.setTips('pwd-tip', result);
-        	if (result === '') {
+        checkPassword: function() {
+            var passwordInput = $('password');
+            var password = passwordInput.value;
+            var result = this.validatePassword(password);
+            this.setTips('pwd-tip', result);
+            if (result === '') {
                 passwordInput.className = 'success';
                 return true;
             } else {
@@ -54,9 +54,50 @@
                 return false;
             }
         },
+        login: function() {
+            if (!this.checkAccount() || !this.checkPassword()) {
+                return false;
+            }
+            var password = $('password').value;
+            var account = $('account').value;
+            var lodingLayer = $('loading-layer');
+            var loginResult = $('login-result');
+            var _this = this;
+            lodingLayer.style.display = 'block';
+            loginResult.style.display= 'none';
+            var beginTime = Date.now();
+            $post('/api/login', {
+                account: account,
+                password: password
+            }, function(res) {
+                var endTime = Date.now();
+                var wastTime = endTime - beginTime;
+                if (wastTime < 500) {
+                    setTimeout(function() {
+                        _this.setLoginResult(res.message);
+                    }, 500 - wastTime);
+                } else {
+                    _this.setLoginResult(res.message);
+                }
+                if (res.statusCode === 0) {
+                    window.location = '/';
+                }
+
+            }, function() {
+                _this.setLoginResult('网络错误请重试');
+                lodingLayer.style.display = 'none';
+            });
+        },
         setTips: function(id, tip) {
             var tipDom = $(id);
             tipDom.innerText = tip;
+        },
+        setLoginResult: function(msg) {
+            var lodingLayer = $('loading-layer');
+            var loginResult = $('login-result');
+            loginResult.innerText = msg;
+            lodingLayer.style.display = 'none';
+            loginResult.style.display= 'block';
         }
     };
 
@@ -74,4 +115,30 @@
     var passwordInput = $('password');
     passwordInput.addEventListener('blur', login.checkPassword.bind(login));
 
+    var loginBtn = $('login-btn');
+    loginBtn.addEventListener('click', login.login.bind(login));
 })();
+
+function $post(url, data, successFn, errorFn) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('post', url);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.send(serialize(data));
+    xhr.onreadystatechange = function() {
+        if (xhr.status >= 200 && xhr.status < 300 && xhr.readyState === 4) {
+            successFn(JSON.parse(xhr.responseText));
+        }
+        if (xhr.status >= 400) {
+            errorFn();
+        }
+    };
+
+    function serialize(data) {
+        var serializeData = '';
+        for (var i in data) {
+            serializeData = serializeData + (serializeData.length > 0 ? '&' : '');
+            serializeData = serializeData + i + '=' + data[i];
+        }
+        return serializeData;
+    }
+}

@@ -3,16 +3,22 @@ var jsx = require('gulp-jsx');
 var plumer = require('gulp-plumber');
 var supervisor = require('gulp-supervisor');
 var browserSync = require('browser-sync');
+var browserify = require('browserify');
+var source = require('vinyl-source-stream');
+var watchify = require('watchify');
+var gutil = require('gulp-util');
+var buffer = require('vinyl-buffer');
+var livereload = require('gulp-livereload');
 
-gulp.task('jsx', function() {
-    gulp.src('src/js/**/*.js')
-        .pipe(plumer())
-        .pipe(jsx({
-            factory: 'React.createClass'
-        }))
-        .pipe(plumer())
-        .pipe(gulp.dest('public/js'));
-});
+// gulp.task('jsx', function() {
+//     gulp.src('src/js/**/*.js')
+//         .pipe(plumer())
+//         .pipe(jsx({
+//             factory: 'React.createClass'
+//         }))
+//         .pipe(plumer())
+//         .pipe(gulp.dest('public/js'));
+// });
 
 gulp.task('browser-sync', function() {
     browserSync.init(null, {
@@ -50,10 +56,55 @@ gulp.task('node-supervisor', function() {
     });
 });
 
+var customOpts = {
+    entries: './src/js/app.jsx',
+    extensions: ['.jsx'],
+    debug: true,
+    cache: {},
+    packageCache: {},
+    externals: {
+    'react': 'React',
+    'react-dom': 'ReactDOM'
+  }
+};
+var b = watchify(browserify(customOpts));
+
+// 在这里加入变换操作
+// 比如： b.transform(coffeeify);
+b.transform('babelify', { presets: ['es2015', 'react'] });
+
+gulp.task('browserify', bundle); // 这样你就可以运行 `gulp js` 来编译文件了
+b.on('update', bundle); // 当任何依赖发生改变的时候，运行打包工具
+b.on('log', gutil.log); // 输出编译日志到终端
+
+function bundle() {
+    return b.bundle()
+        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(source('app.js'))
+        .pipe(buffer())
+        .pipe(gulp.dest('./public/js'))
+        .pipe(livereload({ start: true }));
+}
+
+// gulp.task('browserify', function() {
+//     return browserify({
+//             entries: './src/js/app.jsx',
+//             extensions: ['.jsx'],
+//             debug: true,
+//             watch: true
+//         })
+//         .transform('babelify', { presets: ['es2015', 'react'] })
+//         .bundle()
+//         .pipe(source('app.js'))
+//         .pipe(gulp.dest('./public/js'));
+// });
+
+
 gulp.task('watch', function() {
-    gulp.watch('src/js/**/*.js', ['jsx-changed', 'bs-reload']);
+    gulp.watch('src/js/**/*.js', ['bs-reload']);
+    //gulp.watch('src/js/**/*.jsx', ['bs-reload']);
     gulp.watch('src/css/**/*.css', ['css-changed', 'bs-reload']);
-     gulp.watch('app/views/**/*..html', ['bs-reload']);
+    gulp.watch('app/views/**/*.html', ['bs-reload']);
 });
 
-gulp.task('default', ['jsx', 'node-supervisor', 'browser-sync', 'watch']);
+gulp.task('default', ['node-supervisor', 'browser-sync', 'browserify', 'watch']);
