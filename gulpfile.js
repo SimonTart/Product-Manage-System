@@ -63,15 +63,17 @@ var customOpts = {
     cache: {},
     packageCache: {},
     externals: {
-    'react': 'React',
-    'react-dom': 'ReactDOM'
-  }
+        'react': 'React',
+        'react-dom': 'ReactDOM'
+    }
 };
 var b = watchify(browserify(customOpts));
 
 // 在这里加入变换操作
 // 比如： b.transform(coffeeify);
-b.transform('babelify', { presets: ['es2015', 'react'] });
+b.transform('babelify', {
+    presets: ['es2015', 'react']
+});
 
 gulp.task('browserify', bundle); // 这样你就可以运行 `gulp js` 来编译文件了
 b.on('update', bundle); // 当任何依赖发生改变的时候，运行打包工具
@@ -83,7 +85,9 @@ function bundle() {
         .pipe(source('app.js'))
         .pipe(buffer())
         .pipe(gulp.dest('./public/js'))
-        .pipe(livereload({ start: true }));
+        .pipe(livereload({
+            start: true
+        }));
 }
 
 // gulp.task('browserify', function() {

@@ -64,7 +64,7 @@
             var loginResult = $('login-result');
             var _this = this;
             lodingLayer.style.display = 'block';
-            loginResult.style.display= 'none';
+            loginResult.style.display = 'none';
             var beginTime = Date.now();
             $post('/api/login', {
                 account: account,
@@ -97,7 +97,7 @@
             var loginResult = $('login-result');
             loginResult.innerText = msg;
             lodingLayer.style.display = 'none';
-            loginResult.style.display= 'block';
+            loginResult.style.display = 'block';
         }
     };
 
