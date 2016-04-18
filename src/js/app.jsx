@@ -1,7 +1,19 @@
-import React from 'react';
 import ReactDom from 'react-dom';
-import AppBar from 'material-ui/lib/app-bar';
-import MySampleAppComponent from './test.jsx';
+import React from 'react';
+import {
+	Router, Route, Link
+}
+from 'react-router';
+import LeftNavBar from './app/left-nav/left-nav-bar.jsx';
 
-var app = document.getElementById('app');
-ReactDom.render(<MySampleAppComponent/>,app);
+const App = React.createClass({
+	render: function() {
+		return (
+			<div>
+				<LeftNavBar />
+			</div>
+		);
+	}
+});
+
+ReactDom.render(<App />, document.getElementById('app'));
