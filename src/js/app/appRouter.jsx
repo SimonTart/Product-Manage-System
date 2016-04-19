@@ -1,32 +1,29 @@
-import { Router, Route, Link } from 'react-router';
-import React from 'React';
+import { Router, Route,useRouterHistory} from 'react-router';
+import { createHashHistory } from 'history';
+import React from 'react';
+import App from './main.jsx';
 
-const Home = React.createClass({
-	render: function(){
-		return (
-			<div>HMOE</div>
-		);
-	}
-})
+const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
+
 const Test = React.createClass({
-	render: function(){
+	render:function(){
 		return (
-			<div>Test</div>
+			<div>tes</div>
 		);
 	}
-})
+});
 
-
-
-
-export default AppRouter =  React.createClass({
+const AppRouter =  React.createClass({
 	render: function(){
-		return (<Router>
+		return (
+				<Router history={AppHistory}>
 				    <Route path="/" component={App}>
 				      <Route path="test" component={Test} />
 				    </Route>
 				</Router>
-				);
+
+			);
 	}
 });
+export default AppRouter;
 

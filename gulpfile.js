@@ -57,7 +57,7 @@ gulp.task('node-supervisor', function() {
 });
 
 var customOpts = {
-    entries: './src/js/app.jsx',
+    entries: './src/js/app/app.jsx',
     extensions: ['.jsx'],
     debug: true,
     cache: {},
@@ -84,7 +84,7 @@ function bundle() {
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
         .pipe(source('app.js'))
         .pipe(buffer())
-        .pipe(gulp.dest('./public/js'))
+        .pipe(gulp.dest('./public/js/app'))
         .pipe(livereload({
             start: true
         }));
