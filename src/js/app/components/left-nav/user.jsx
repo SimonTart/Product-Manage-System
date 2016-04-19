@@ -13,17 +13,17 @@ const secondListItems = [
     	primaryText="查找"
     	key={1}
     	leftIcon={<Search/>}
-        containerElement={<Link to="/user/add"/>}
     />,
     <ListItem
-    	primaryText="修改"
-    	key={2}
-    	leftIcon={<ModeEdit/>}
+        primaryText="修改"
+        key={2}
+        leftIcon={<ModeEdit/>}
     />,
-	<ListItem
-    	primaryText="添加"
-    	key={3}
-    	leftIcon={<Add/>}
+    <ListItem
+        primaryText="添加"
+        key={3}
+        leftIcon={<Add/>}
+        containerElement={<Link to="/user/add"/>}
     />,
 	<ListItem
     	primaryText="删除"

@@ -1,6 +1,6 @@
 import ReactDom from 'react-dom';
 import React from 'react';
-import injectTapEventPlugin from "react-tap-event-plugin";
+import injectTapEventPlugin from 'react-tap-event-plugin';
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
 import LeftNavBar from './partial/left-nav.jsx';
 
@@ -9,11 +9,11 @@ injectTapEventPlugin();
 const appContentStyle = {
 	paddingLeft:256
 };
-const AppContent = React.createClass({
-	render: function(){
-		return (<div style={appContentStyle}></div>);
-	}
-});
+
+const appContentBoxStyle= {
+	paddingLeft: '5%',
+	paddingRight: '5%'
+};
 
 const App = React.createClass({
 	childContextTypes: {
@@ -32,7 +32,11 @@ const App = React.createClass({
 		return (
 			<div>
 				<LeftNavBar />
-				<AppContent>{this.props.children}</AppContent>
+				<div style={appContentStyle}>
+					<div style={appContentBoxStyle}>
+						{this.props.children}
+					</div>
+				</div>
 			</div>
 		);
 	}

@@ -6,7 +6,7 @@ var UserSchema = new Schema({
 	password:{type:String,required:true}
 	// name:{type:String,required:true},
 	// sex:{type:Number,required:true},
-	// position:{type:String,required:true},
+	// position:{type:String},
 	// address:{type:String},
 	// phoneNumber:{type:String},
 	// addByUserId:{type:Schema.Types.ObjectId,required:true},
