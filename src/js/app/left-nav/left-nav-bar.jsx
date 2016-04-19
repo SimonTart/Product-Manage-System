@@ -2,15 +2,17 @@ import React from 'react';
 import LeftNav from 'material-ui/lib/left-nav';
 import MenuItem from 'material-ui/lib/menus/menu-item';
 import LoginUser from './loginUser.jsx';
+import ProductItem from './productItem.jsx';
+import UserItem from './userItem.jsx';
+import {Link} from 'react-router';
 
 export default React.createClass({
+
 	render: function() {
 		return (<LeftNav>
 					<LoginUser/>
-					<MenuItem>商品管理</MenuItem>
+					<ProductItem/>
+					<UserItem/>
        			</LeftNav>);
 	}
 });
-      			// <MenuItem>商品管理</MenuItem>
-      			// <MenuItem>订单管理</MenuItem>
-      			// <MenuItem>报表</MenuItem>
