@@ -2,7 +2,7 @@ import ReactDom from 'react-dom';
 import React from 'react';
 import injectTapEventPlugin from "react-tap-event-plugin";
 import ThemeManager from 'material-ui/lib/styles/theme-manager';
-import LeftNavBar from './left-nav/left-nav-bar.jsx';
+import LeftNavBar from './partial/left-nav.jsx';
 
 injectTapEventPlugin();
 
