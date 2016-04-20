@@ -29,7 +29,7 @@ const floatingLabelStyle = {
 };
 
 const paperBoxStyle = {
-	padding: '25px 30px 150px 30px'
+	padding: '25px 30px 150px 25px'
 };
 
 const centerBoxStyle = {
@@ -55,8 +55,8 @@ const AddUser = React.createClass({
 		var account = document.querySelector('#account').value;
 		var password = document.querySelector('#password').value;
 		var repassword = document.querySelector('#repassword').value;
-		var name = document.querySelector('name').value;
-		var position = document.querySelector('position').value;
+		var name = document.querySelector('#name').value;
+		var position = document.querySelector('#position').value;
 		var sex = this.state.sex;
 		var birthday = this.state.birthday;
 		if (account.length < 5 || account.length > 15) {
@@ -79,30 +79,32 @@ const AddUser = React.createClass({
 	},
 	render: function () {
 		return (
-			<Paper>
-				<div style={paperBoxStyle}>
-					<div style={centerBoxStyle}>
-						<p>添加用户</p>
-						<AccountTextField id="account"/>
-						<br/>
-						<PasswordBox id="password"/>
-						<NameTextField id="name"/>
-						<br/>
-						<SexSelectField onSexChange={this.onSexChange}/>
-						<PostionTextField id="position"/>
-						<br/>
-						<PhoneTextField id="birthday"/>
-						<BirthdayPicker />
-						<RaisedButton label="添加" style={confirmBtnStyle} secondary={true} onClick={this.onSubmit}/>
-						<Snackbar
-							open={this.state.open}
-							message={this.state.message}
-							autoHideDuration={2000}
-							onRequestClose={this.handleMessageShow}
-						/>
+			<div>
+				<Paper>
+					<div style={paperBoxStyle}>
+						<div style={centerBoxStyle}>
+							<p>添加用户</p>
+							<AccountTextField id="account"/>
+							<br/>
+							<PasswordBox id="password"/>
+							<NameTextField id="name"/>
+							<br/>
+							<SexSelectField onSexChange={this.onSexChange}/>
+							<PostionTextField id="position"/>
+							<br/>
+							<PhoneTextField id="birthday"/>
+							<BirthdayPicker />
+							<RaisedButton label="添加" style={confirmBtnStyle} secondary={true} onClick={this.onSubmit}/>
+						</div>
 					</div>
-				</div>
-			</Paper>
+				</Paper>
+				<Snackbar
+					open={this.state.open}
+					message={this.state.message}
+					autoHideDuration={2000}
+					onRequestClose={this.handleMessageShow}
+				/>
+			</div>
 		);
 	}
 });

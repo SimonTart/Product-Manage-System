@@ -20,25 +20,25 @@ var livereload = require('gulp-livereload');
 //         .pipe(gulp.dest('public/js'));
 // });
 
-gulp.task('browser-sync', function() {
-    browserSync.init(null, {
-        proxy: 'http://localhost:3000',
-        browser: 'google chrome',
-        port: 7000,
-    });
-});
+// gulp.task('browser-sync', function() {
+//     browserSync.init(null, {
+//         proxy: 'http://localhost:3000',
+//         browser: 'google chrome',
+//         port: 7000,
+//     });
+// });
 
 gulp.task('bs-reload', function() {
     browserSync.reload();
 });
 
-gulp.task('jsx-changed', function() {
-    gulp.src('src/js/**/*.js')
-        .pipe(jsx({
-            factory: 'React.createClass'
-        }))
-        .pipe(gulp.dest('public/js'));
-});
+// gulp.task('jsx-changed', function() {
+//     gulp.src('src/js/**/*.js')
+//         .pipe(jsx({
+//             factory: 'React.createClass'
+//         }))
+//         .pipe(gulp.dest('public/js'));
+// });
 
 gulp.task('css-changed', function() {
     gulp.src('src/css/**/*.css')
@@ -56,39 +56,39 @@ gulp.task('node-supervisor', function() {
     });
 });
 
-var customOpts = {
-    entries: './src/js/app/app.jsx',
-    extensions: ['.jsx'],
-    debug: true,
-    cache: {},
-    packageCache: {},
-    externals: {
-        'react': 'React',
-        'react-dom': 'ReactDOM'
-    }
-};
-var b = watchify(browserify(customOpts));
+// var customOpts = {
+//     entries: './src/js/app/app.jsx',
+//     extensions: ['.jsx'],
+//     debug: true,
+//     cache: {},
+//     packageCache: {},
+//     externals: {
+//         'react': 'React',
+//         'react-dom': 'ReactDOM'
+//     }
+// };
+// var b = watchify(browserify(customOpts));
 
-// 在这里加入变换操作
-// 比如： b.transform(coffeeify);
-b.transform('babelify', {
-    presets: ['es2015', 'react']
-});
+// // 在这里加入变换操作
+// // 比如： b.transform(coffeeify);
+// b.transform('babelify', {
+//     presets: ['es2015', 'react']
+// });
 
-gulp.task('browserify', bundle); // 这样你就可以运行 `gulp js` 来编译文件了
-b.on('update', bundle); // 当任何依赖发生改变的时候，运行打包工具
-b.on('log', gutil.log); // 输出编译日志到终端
+// gulp.task('browserify', bundle); // 这样你就可以运行 `gulp js` 来编译文件了
+// b.on('update', bundle); // 当任何依赖发生改变的时候，运行打包工具
+// b.on('log', gutil.log); // 输出编译日志到终端
 
-function bundle() {
-    return b.bundle()
-        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-        .pipe(source('app.js'))
-        .pipe(buffer())
-        .pipe(gulp.dest('./public/js/app'))
-        .pipe(livereload({
-            start: true
-        }));
-}
+// function bundle() {
+//     return b.bundle()
+//         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+//         .pipe(source('app.js'))
+//         .pipe(buffer())
+//         .pipe(gulp.dest('./public/js/app'))
+//         .pipe(livereload({
+//             start: true
+//         }));
+// }
 
 // gulp.task('browserify', function() {
 //     return browserify({
@@ -111,4 +111,4 @@ gulp.task('watch', function() {
     gulp.watch('app/views/**/*.html', ['bs-reload']);
 });
 
-gulp.task('default', ['node-supervisor', 'browser-sync', 'browserify', 'watch']);
+gulp.task('default', ['node-supervisor',  'watch']);

@@ -278,9 +278,11 @@ if (areIntlLocalesSupported('zh')) {
 }
 
 const birthdayTitle={marginTop:15};
+
 function formatDate(date){
   return date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
 }
+
 const  BirthdayPicker = React.createClass({
 	onChange: function (e,date) {
 		this.props.onChange(e,date);		
