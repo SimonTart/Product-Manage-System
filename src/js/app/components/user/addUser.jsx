@@ -4,6 +4,9 @@ import TextField from 'material-ui/lib/text-field';
 import SelectField from 'material-ui/lib/select-field';
 import RadioButton from 'material-ui/lib/radio-button';
 import RadioButtonGroup from 'material-ui/lib/radio-button-group';
+import DatePicker from 'material-ui/lib/date-picker/date-picker';
+
+import areIntlLocalesSupported from 'intl-locales-supported';
 
 const hintStyle ={
 	color: Colors.grey500
@@ -46,6 +49,7 @@ const AccountTextField = React.createClass({
 		      floatingLabelStyle={floatingLabelStyle}
 		      onBlur={this.handleChange}
 		      onChange={this.handleChange}
+			  id={this.props.id}
 		    />
 		);
 	}
@@ -82,6 +86,7 @@ const PasswordTextField = React.createClass({
 			    onBlur={this.handleChange}
 			    onChange={this.handleChange}
 			    type="password"
+				id={this.props.id}
 			/>
 		);
 	}
@@ -128,6 +133,7 @@ const RePasswordTextField = React.createClass({
 			    onBlur={this.handleChange}
 			    onChange={this.handleChange}
 			    type="password"
+				id={this.props.id}
 			/>
 		);
 	}
@@ -145,8 +151,14 @@ const PasswordBox = React.createClass({
 	render: function(){
 		return (
 			<div>
-				<PasswordTextField onPasswordChange={this.passwordChange}/><br />
-				<RePasswordTextField password={this.state.password}/>
+				<PasswordTextField 
+					onPasswordChange={this.passwordChange}
+					id={this.props.id} 
+				/><br />
+				<RePasswordTextField 
+					password={this.state.password}
+					id={'re' + this.props.id}
+				/>
 			</div>
 		);
 	}
@@ -176,6 +188,7 @@ const NameTextField = React.createClass({
 		      floatingLabelStyle={floatingLabelStyle}
 		      onBlur={this.handleChange}
 		      onChange={this.handleChange}
+			  id={this.props.id}
 		    />
 		);
 	}
@@ -191,11 +204,14 @@ const selectStyles = {
 };
 
 const SexSelectField = React.createClass({
+	onChange: function(e,value) {
+		this.props.onChange(e,value);
+	},
 	render: function(){
 		return(
 			<div>
 				<p style={selectStyles.title}>性别</p>
-				<RadioButtonGroup name="sex" defaultSelected="man">
+				<RadioButtonGroup name="sex" defaultSelected="man" onChange={this.onChange}>
 			      <RadioButton
 			        value="man"
 			        label="男"
@@ -219,6 +235,7 @@ const PostionTextField = React.createClass({
 		      floatingLabelText="职务"
 		      hintStyle={hintStyle}
 		      floatingLabelStyle={floatingLabelStyle}
+			  id={this.props.id}
 		    />
 		);
 	}
@@ -232,15 +249,68 @@ const PhoneTextField = React.createClass({
 		      floatingLabelText="联系方式"
 		      hintStyle={hintStyle}
 		      floatingLabelStyle={floatingLabelStyle}
+			  id={this.props.id}
 		    />
 		);
 	}
 });
+
+const AddressTextField = React.createClass({
+	render: function(){
+		return(
+			<TextField 
+				hintText="住址"
+				floatingLabelText="住址"
+				hintStyle={hintStyle}
+				floatingLabelStyle={floatingLabelStyle}
+				id={this.props.id}
+			/>	
+		);	
+	}
+});
+
+if (areIntlLocalesSupported('zh')) {
+  var DateTimeFormat = global.Intl.DateTimeFormat;
+} else {
+  const IntlPolyfill = require('intl');
+  require('intl/locale-data/jsonp/zh');
+  var DateTimeFormat = IntlPolyfill.DateTimeFormat;
+}
+
+const birthdayTitle={marginTop:15};
+function formatDate(date){
+  return date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
+}
+const  BirthdayPicker = React.createClass({
+	onChange: function (e,date) {
+		this.props.onChange(e,date);		
+	},
+	render: function () {
+		return (
+			<div>
+				<p style={birthdayTitle}>出生日期</p>
+				<DatePicker
+					hintText="出生日期"
+					wordings={{ok: '确定', cancel: '取消'}}
+					firstDayOfWeek={1}
+					DateTimeFormat={DateTimeFormat}
+					locale="zh"
+					mode="landscape"
+					formatDate={formatDate}
+					onChange={this.onChange}
+				/>	
+			</div>
+		);
+	}	
+});
+
 export {
 	AccountTextField,
 	PasswordBox,
 	NameTextField,
 	SexSelectField,
 	PostionTextField,
-	PhoneTextField
+	PhoneTextField,
+	AddressTextField,
+	BirthdayPicker
 };

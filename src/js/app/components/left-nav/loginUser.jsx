@@ -20,7 +20,7 @@ const secondListItems = [
 		key={1}
 		leftIcon={<ModeEdit/>}
 		containerElement={<Link to="/test" />}
-	    />,
+	/>,
 	<ListItem
 		primaryText="退出登录"
 		leftIcon={<Exit/>}
@@ -29,10 +29,10 @@ const secondListItems = [
 ];
 
 export default React.createClass({
-	handleToggle: function() {
+	handleToggle: function () {
 		console.log('test');
 	},
-	render: function() {
+	render: function () {
 		return (
 			<ListItem primaryTogglesNestedList= {true}
 				leftAvatar={<Avatar backgroundColor={Colors.blue500} icon={<PermIdentity />} />}
@@ -41,7 +41,7 @@ export default React.createClass({
 				style = {listItemStyle}
 			>
 			</ListItem>
-	);
-}
+		);
+	}
 
 });
