@@ -1,5 +1,6 @@
 import React from 'react';
 import ListItem from 'material-ui/lib/lists/list-item';
+import {Link} from 'react-router';
 
 import Polymer from 'material-ui/lib/svg-icons/action/polymer';
 import Add from 'material-ui/lib/svg-icons/content/add';
@@ -22,6 +23,7 @@ const secondListItems = [
     	primaryText="添加"
     	key={3}
     	leftIcon={<Add/>}
+		containerElement={<Link to="/product/add"/>}
     />,
 	<ListItem
     	primaryText="删除"

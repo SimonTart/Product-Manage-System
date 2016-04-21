@@ -54,18 +54,27 @@ const AddUser = React.createClass({
 	},
 	onSubmit: function () {
 		var result = this.checkInfo();
-		if (!result) {
+		var _this = this;
+		if (!result || this.state.state === 'pending') {
 			return;
 		}
+		this.setState({ state: 'pending' });
 		reqwest({
 			url: '/api/user',
+			method: 'POST',
 			data: result,
 			type: 'json'
 		}).then(function (res) {
-			console.log(res);
-		}).fail(function (err,message) {
-			console.log(err);
-			console.log(message);
+			if (res.statuCode === 0) {
+
+			} else {
+
+			}
+			_this.alertMessage(res.message);
+			_this.setState({ state: 'end' });
+		}).fail(function (err, message) {
+			_this.setState({ state: 'end' });
+			_this.alertMessage('网络错误，请重试');
 		})
 	},
 	checkInfo: function () {
@@ -139,7 +148,7 @@ const AddUser = React.createClass({
 							<PasswordBox id="password"/>
 							<NameTextField id="name"/>
 							<br/>
-							<SexSelectField onSexChange={this.onSexChange}/>
+							<SexSelectField onChange={this.onSexChange}/>
 							<BirthdayPicker onChange={this.handleBirthdayChange}/>
 							<PhoneTextField id="phone"/>
 							<br/>
@@ -147,14 +156,20 @@ const AddUser = React.createClass({
 							<br/>
 							<AddressTextField id="address"/>
 							<br/>
-							<RaisedButton label="添加" style={confirmBtnStyle} secondary={true} onClick={this.onSubmit}/>
+							<RaisedButton 
+								label={this.state.state === 'peding' ? '正在添加':'添加'} 
+								style={confirmBtnStyle} 
+								secondary={true} 
+								onClick={this.onSubmit}
+							/>
 						</div>
 						<Snackbar
 							open={this.state.open}
 							message={this.state.message}
 							autoHideDuration={2000}
 							onRequestClose={this.handleMessageShow}
-							/>
+							disabled={this.state.state === 'pending'}
+						/>
 					</div>
 				</Paper>
 			</div>

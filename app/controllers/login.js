@@ -32,12 +32,12 @@ router.post('/', function(req, res) {
         	}
             if (user.password === login.hashPassword) {
                 req.session.l = 1;
+                req.session.user = user;
                 res.json({
                     statusCode: 0,
                     message: '登录成功'
                 });
             } else {
-            	console.log(2);
                 res.json({
                     statusCode: 1,
                     message: '用户名或密码错误'
