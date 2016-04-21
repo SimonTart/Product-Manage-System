@@ -8,7 +8,7 @@ import Colors from 'material-ui/lib/styles/colors';
 import Divider from 'material-ui/lib/divider';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
-
+import reqwest from 'reqwest';
 import {
 	AccountTextField,
 	PasswordBox,
@@ -16,7 +16,8 @@ import {
 	SexSelectField,
 	PostionTextField,
 	PhoneTextField,
-	BirthdayPicker
+	BirthdayPicker,
+	AddressTextField
 } from '../components/user/addUser.jsx';
 
 
@@ -52,17 +53,66 @@ const AddUser = React.createClass({
 		}
 	},
 	onSubmit: function () {
+		var result = this.checkInfo();
+		if (!result) {
+			return;
+		}
+		reqwest({
+			url: '/api/user',
+			data: result,
+			type: 'json'
+		}).then(function (res) {
+			console.log(res);
+		}).fail(function (err,message) {
+			console.log(err);
+			console.log(message);
+		})
+	},
+	checkInfo: function () {
 		var account = document.querySelector('#account').value;
 		var password = document.querySelector('#password').value;
 		var repassword = document.querySelector('#repassword').value;
 		var name = document.querySelector('#name').value;
-		var position = document.querySelector('#position').value;
 		var sex = this.state.sex;
-		var birthday = this.state.birthday;
+
+		var optionalValueCollection = {
+			position: document.querySelector('#position').value,
+			phone: document.querySelector('#phone').value,
+			birthday: this.state.birthday,
+			address: document.querySelector('#address')
+		};
+		var optionalValue = ['position', 'phone', 'birthday', 'address'];
+
 		if (account.length < 5 || account.length > 15) {
 			this.alertMessage('账号必须由5-15位大小写字母和数字组成');
-			return;
+			return false;
 		}
+		if (password.length < 5 || password.length > 15) {
+			this.alertMessage('密码长度必须在5-15之间');
+			return false;
+		}
+		if (password !== repassword) {
+			this.alertMessage('两次输入的密码不一致');
+			return false;
+		}
+		if (name === '') {
+			this.alertMessage('姓名不能为空');
+			return false;
+		}
+
+		var userInfo = {
+			account: account,
+			password: password,
+			name: name,
+			sex: sex === 'man' ? 1 : 0
+		};
+
+		optionalValue.forEach(function (value) {
+			if (optionalValueCollection[value]) {
+				userInfo[value] = value;
+			}
+		});
+		return userInfo;
 	},
 	alertMessage: function (tip) {
 		this.setState({ message: tip, open: true });
@@ -70,8 +120,8 @@ const AddUser = React.createClass({
 	onSexChange: function (e, sex) {
 		this.setState({ sex: sex });
 	},
-	onBirthdayChange: function (e, date) {
-		var formatDate = date.getFullYears() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
+	handleBirthdayChange: function (e, date) {
+		var formatDate = date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate();
 		this.setState({ birthday: formatDate });
 	},
 	handleMessageShow: function () {
@@ -90,20 +140,23 @@ const AddUser = React.createClass({
 							<NameTextField id="name"/>
 							<br/>
 							<SexSelectField onSexChange={this.onSexChange}/>
+							<BirthdayPicker onChange={this.handleBirthdayChange}/>
+							<PhoneTextField id="phone"/>
+							<br/>
 							<PostionTextField id="position"/>
 							<br/>
-							<PhoneTextField id="birthday"/>
-							<BirthdayPicker />
+							<AddressTextField id="address"/>
+							<br/>
 							<RaisedButton label="添加" style={confirmBtnStyle} secondary={true} onClick={this.onSubmit}/>
 						</div>
+						<Snackbar
+							open={this.state.open}
+							message={this.state.message}
+							autoHideDuration={2000}
+							onRequestClose={this.handleMessageShow}
+							/>
 					</div>
 				</Paper>
-				<Snackbar
-					open={this.state.open}
-					message={this.state.message}
-					autoHideDuration={2000}
-					onRequestClose={this.handleMessageShow}
-				/>
 			</div>
 		);
 	}

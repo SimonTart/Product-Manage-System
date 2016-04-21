@@ -49,7 +49,7 @@ gulp.task('css-changed', function() {
 gulp.task('node-supervisor', function() {
     supervisor('./app.js', {
         watch: ['app', 'config'],
-        ignore: ['app/views'],
+        ignore: ['app/views','node_modules/'],
         pollInterval: 700,
         extensions: ['js'],
         debug: true

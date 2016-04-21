@@ -12,13 +12,16 @@
     "history": "^2.0.2",
     "intl": "^1.1.0",
     "intl-locales-supported": "^1.0.0",
+    "isomorphic-fetch": "^2.2.1",
     "log4js": "^0.6.35",
     "material-ui": "^0.14.4",
     "mongoose": "^4.4.12",
+    "node-fetch": "^1.5.1",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-router": "^2.2.4",
     "react-tap-event-plugin": "^0.2.2",
+    "reqwest": "^2.0.5",
     "swig": "^1.4.2"
   },
   "devDependencies": {
