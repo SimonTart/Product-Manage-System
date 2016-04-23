@@ -69,51 +69,29 @@ export default React.createClass({
         }
         return (
             <div>
-                <p style={titleStyle}>添加商品</p>
-                <div style={areaStyle}>
-                    <div style={labelStyle}>商品编号：</div>
-                    <span>546546546513</span><span>(由系统自动生成) </span>
-                </div>
+                <p style={titleStyle}>添加订单
+                </p>
                 <br />
                 <div style={areaStyle}>
-                    <div style={labelStyle}>商品名字：</div>
+                    <div style={labelStyle}>订单名字：</div>
                     <TextField
-                        hintText="商品名字"
+                        hintText="订单名字"
                         onChange={this.handleNameChange}
                         errorText={this.state.nameErrorText}
                         style={textStyle}
                         />
                 </div>
                 <div style={areaStyle}>
-                    <div style={labelStyle}>商品价格：</div>
+                    <div style={labelStyle}>订单描述：</div>
                     <TextField
-                        hintText="商品价格"
+                        hintText="订单描述"
                         style={textStyle}
                         errorText={this.state.priceErrorText}
                         onChange={this.handlePriceChange}
                      />
-                    <div style={{ display: 'inline-block' }}>RMB</div>
-                </div>
-                <div style={areaStyle}>
-                    <div style={labelStyle}>商品数量：</div>
-                    <TextField
-                        hintText="商品数量"
-                        style={textStyle}
-                        defualt='0'
-                        errorText={this.state.storeNumberErrorText}
-                        onChange={this.handleStoreNumberChange}
-                     />
-                </div>
-                <div style={areaStyle}>
-                    <div style={labelStyle}>商品照片：</div>
-                    <input
-                        type="file"
-                        accept="image/*"
-                        style={textStyle}
-                        />
                 </div>
                 <RaisedButton
-                    label="添加"
+                    label="新建"
                     secondary={true}
                     style={addBtnStyle}
                 />

@@ -4,6 +4,9 @@ import React from 'react';
 import App from './main.jsx';
 import {AddUser} from './partial/addUser.jsx';
 import AddProduct from './partial/addProduct.jsx';
+import UserList from './partial/userList.jsx';
+import ProductList from './partial/productList.jsx';
+import AddOrder from './partial/addOrder.jsx';
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
@@ -22,7 +25,10 @@ const AppRouter =  React.createClass({
 				    <Route path="/" component={App}>
 				      <Route path="test" component={Test} />
 				      <Route path="/user/add" component={AddUser}/>
+					  <Route path="/user/find" component={UserList}/>
 					  <Route path="/product/add" component={AddProduct} />
+					  <Route path="/product/list" component={ProductList} />
+					  <Route path="/order/add" component={AddOrder} />
 				    </Route>
 				</Router>
 

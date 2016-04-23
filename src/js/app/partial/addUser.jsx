@@ -9,6 +9,8 @@ import Divider from 'material-ui/lib/divider';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
 import reqwest from 'reqwest';
+import Toggle from 'material-ui/lib/toggle';
+
 import {
 	AccountTextField,
 	PasswordBox,
@@ -137,40 +139,167 @@ const AddUser = React.createClass({
 		this.setState({ open: false });
 	},
 	render: function () {
+		const paperStyle= {
+			overflow: 'hidden'
+		}
+		const leftAreaStyle = {
+			paddingRight: 60,
+			paddingLeft: 60,
+			boxSizing: 'border-box',
+			display: 'inline-block',
+			float: 'left',
+			borderRight: '1px solid #efefef',
+			marginTop: 45
+		}
+		const titleStyle = {
+			paddingTop: 25,
+			textAlign: 'center',
+			fontWeight: 600,
+			fontSize: '24px',
+			color: Colors.blue500
+		}
+		const infoTitleStyle = {
+			fontSize: '20px',
+		}
+		const rightAreaStyle = {
+			paddingLeft: 60,
+			boxSizing: 'border-box',
+			display: 'inline-block',
+			float: 'left',
+			marginTop: 45,
+			maxWidth: '50%'
+		}
+		const authTitleStyle={
+			fontSize: '20px',
+			marginBottom: 25
+		}
+		const authToggleStyle={
+			width: 'auto',
+			display: 'inline-block',
+			marginRight: 15,
+			marginBottom: 25
+		}
+		const authTypeTitleStyle= {
+			marginBottom:15
+		}
 		return (
 			<div>
-				<Paper>
-					<div style={paperBoxStyle}>
-						<div style={centerBoxStyle}>
-							<p>添加用户</p>
-							<AccountTextField id="account"/>
-							<br/>
-							<PasswordBox id="password"/>
-							<NameTextField id="name"/>
-							<br/>
-							<SexSelectField onChange={this.onSexChange}/>
-							<BirthdayPicker onChange={this.handleBirthdayChange}/>
-							<PhoneTextField id="phone"/>
-							<br/>
-							<PostionTextField id="position"/>
-							<br/>
-							<AddressTextField id="address"/>
-							<br/>
-							<RaisedButton 
-								label={this.state.state === 'peding' ? '正在添加':'添加'} 
-								style={confirmBtnStyle} 
-								secondary={true} 
-								onClick={this.onSubmit}
+				<Paper style={paperStyle}>
+					<p style={titleStyle}>添加用户</p>
+					<div style={leftAreaStyle}>
+						<p style={infoTitleStyle}>用户信息填写</p>
+						<AccountTextField id="account"/>
+						<br/>
+						<PasswordBox id="password"/>
+						<NameTextField id="name"/>
+						<br/>
+						<SexSelectField onChange={this.onSexChange}/>
+						<BirthdayPicker onChange={this.handleBirthdayChange}/>
+						<PhoneTextField id="phone"/>
+						<br/>
+						<PostionTextField id="position"/>
+						<br/>
+						<AddressTextField id="address"/>
+						<br/>
+						<RaisedButton
+							label={this.state.state === 'peding' ? '正在添加' : '添加'}
+							style={confirmBtnStyle}
+							secondary={true}
+							onClick={this.onSubmit}
+							/>
+					</div>
+					<div style={rightAreaStyle}>
+						<p style={authTitleStyle}>用户权限</p>
+						<div>
+							<p style={authTypeTitleStyle}>商品管理权限</p>
+							<Toggle
+								label="查看商品信息"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="添加商品"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="编译商品"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="删除商品"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="出售商品"
+								labelPosition="right"
+								style={authToggleStyle}
 							/>
 						</div>
-						<Snackbar
-							open={this.state.open}
-							message={this.state.message}
-							autoHideDuration={2000}
-							onRequestClose={this.handleMessageShow}
-							disabled={this.state.state === 'pending'}
-						/>
+						<div>
+							<p style={authTypeTitleStyle}>用户管理权限</p>
+							<Toggle
+								label="查看用户信息"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="添加用户"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="修改用户信息"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="删除用户"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+						</div>
+						<div>
+							<p style={authTypeTitleStyle}>订单管理权限</p>
+							<Toggle
+								label="查看订单信息"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="新建订单"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="编辑订单"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+							<Toggle
+								label="删除订单"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+						</div>
+						<div>
+							<p style={authTypeTitleStyle}>报表管理权限</p>
+							<Toggle
+								label="查看报表"
+								labelPosition="right"
+								style={authToggleStyle}
+							/>
+						</div>
 					</div>
+					<Snackbar
+						open={this.state.open}
+						message={this.state.message}
+						autoHideDuration={2000}
+						onRequestClose={this.handleMessageShow}
+						disabled={this.state.state === 'pending'}
+						/>
 				</Paper>
 			</div>
 		);
