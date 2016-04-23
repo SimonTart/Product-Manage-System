@@ -49,9 +49,13 @@ const confirmBtnStyle = {
 
 const AddUser = React.createClass({
 	getInitialState: function () {
+		this.auth = [];
 		return {
 			message: '',
-			open: false
+			open: false,
+			productAuth: false,
+			userAuth: false,
+			orderAuth: false
 		}
 	},
 	onSubmit: function () {
@@ -138,8 +142,37 @@ const AddUser = React.createClass({
 	handleMessageShow: function () {
 		this.setState({ open: false });
 	},
+	getHandleAuthoToggle: function (index) {
+		return function (event, value) {
+			var auth = this.auth;
+			this.setState({productAuth: true});
+			return;
+			if (value) {
+				this.auth.push(index);
+			} else {
+				this.auth.splice(auth.indexOf(index))
+			}
+			this.syncToggle(index);
+		}.bind(this)
+	},
+	syncToggle: function(index){
+		const authRange = {
+			product: [2, 3, 4, 5],
+			user: [7, 8, 9],
+			order: [11, 12, 13]
+		};
+		console.log(index);
+		for(var i in authRange){
+			if(authRange[i].indexOf(index)){
+				var newObj = {};
+				newObj[i+'Auth'] = true;
+				this.setState(newObj);
+				return;
+			}
+		}
+	},
 	render: function () {
-		const paperStyle= {
+		const paperStyle = {
 			overflow: 'hidden'
 		}
 		const leftAreaStyle = {
@@ -167,20 +200,20 @@ const AddUser = React.createClass({
 			display: 'inline-block',
 			float: 'left',
 			marginTop: 45,
-			maxWidth: '50%'
+			maxWidth: '60%'
 		}
-		const authTitleStyle={
+		const authTitleStyle = {
 			fontSize: '20px',
 			marginBottom: 25
 		}
-		const authToggleStyle={
+		const authToggleStyle = {
 			width: 'auto',
 			display: 'inline-block',
 			marginRight: 15,
 			marginBottom: 25
 		}
-		const authTypeTitleStyle= {
-			marginBottom:15
+		const authTypeTitleStyle = {
+			marginBottom: 15
 		}
 		return (
 			<div>
@@ -208,7 +241,7 @@ const AddUser = React.createClass({
 							onClick={this.onSubmit}
 							/>
 					</div>
-					<div style={rightAreaStyle}>
+					<div style={rightAreaStyle} onToggle={this.getHandleAuthoToggle(9) }>
 						<p style={authTitleStyle}>用户权限</p>
 						<div>
 							<p style={authTypeTitleStyle}>商品管理权限</p>
@@ -216,27 +249,33 @@ const AddUser = React.createClass({
 								label="查看商品信息"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(1) }
+								toggled = {this.state.productAuth}
+								/>
 							<Toggle
 								label="添加商品"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(2) }
+								/>
 							<Toggle
 								label="编译商品"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(3) }
+								/>
 							<Toggle
 								label="删除商品"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(4) }
+								/>
 							<Toggle
 								label="出售商品"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(5) }
+								/>
 						</div>
 						<div>
 							<p style={authTypeTitleStyle}>用户管理权限</p>
@@ -244,22 +283,27 @@ const AddUser = React.createClass({
 								label="查看用户信息"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(6) }
+								toggled={this.state.userAuth}
+								/>
 							<Toggle
 								label="添加用户"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(7) }
+								/>
 							<Toggle
 								label="修改用户信息"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(8) }
+								/>
 							<Toggle
 								label="删除用户"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(9) }
+								/>
 						</div>
 						<div>
 							<p style={authTypeTitleStyle}>订单管理权限</p>
@@ -267,22 +311,27 @@ const AddUser = React.createClass({
 								label="查看订单信息"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(10) }
+								toggled={this.state.orderAuth}
+								/>
 							<Toggle
 								label="新建订单"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(11) }
+								/>
 							<Toggle
 								label="编辑订单"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(12) }
+								/>
 							<Toggle
 								label="删除订单"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(13) }
+								/>
 						</div>
 						<div>
 							<p style={authTypeTitleStyle}>报表管理权限</p>
@@ -290,7 +339,8 @@ const AddUser = React.createClass({
 								label="查看报表"
 								labelPosition="right"
 								style={authToggleStyle}
-							/>
+								onToggle={this.getHandleAuthoToggle(14) }
+								/>
 						</div>
 					</div>
 					<Snackbar
