@@ -25,7 +25,7 @@ const AppRouter =  React.createClass({
 				    <Route path="/" component={App}>
 				      <Route path="test" component={Test} />
 				      <Route path="/user/add" component={AddUser}/>
-					  <Route path="/user/find" component={UserList}/>
+					  <Route path="/user/list" component={UserList}/>
 					  <Route path="/product/add" component={AddProduct} />
 					  <Route path="/product/list" component={ProductList} />
 					  <Route path="/order/add" component={AddOrder} />

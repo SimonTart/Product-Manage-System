@@ -13,6 +13,7 @@ const secondListItems = [
     	primaryText="查找"
     	key={1}
     	leftIcon={<Search/>}
+		containerElement={<Link to="/user/list"/>}
     />,
     <ListItem
         primaryText="修改"

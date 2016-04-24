@@ -4,10 +4,10 @@ var User = mongoose.model('User');
 var utils = require('../middlewares/utils.js');
 
 module.exports = function(app) {
-    app.use('/api/login', router);
+    app.use('/api', router);
 };
 
-router.post('/', function(req, res) {
+router.post('/login', function(req, res) {
     var login = {
         account: req.body.account,
         password: req.body.password
@@ -52,20 +52,26 @@ router.post('/', function(req, res) {
         });
 });
 
-router.post('/adduser', function(req, res) {
-    var newUser = {
-        account: req.body.account,
-        password: utils.hashPassword(req.body.password)
-    };
-
-    var newUserModel = new User(newUser);
-    newUserModel.save()
-        .then(function(doc) {
-            console.log(doc);
-            res.send('ok');
-        }, function(err) {
-            console.log(err);
-            res.send(err);
+router.post('/logout',function (req,res) {
+    if(req.session.l === 1){
+        req.session.destroy(function(err) {
+           if(err){
+               console.error(err);
+               res.json({
+                   statusCode: -1,
+                   message: ''
+               });
+           }else{
+               res.json({
+                   statusCode: 0,
+                   message: '成功'
+               });
+           }
         });
-
+    }else{
+        res.json({
+            statusCode: 0,
+            message: '成功'
+        });
+    }
 });

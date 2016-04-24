@@ -8,6 +8,7 @@ import Avatar from 'material-ui/lib/avatar';
 import PermIdentity from 'material-ui/lib/svg-icons/action/perm-identity';
 import ModeEdit from 'material-ui/lib/svg-icons/editor/mode-edit';
 import Exit from 'material-ui/lib/svg-icons/action/exit-to-app';
+import reqwest from 'reqwest';
 
 const listItemStyle = {
 	color: Colors.blue500,
@@ -25,13 +26,27 @@ const secondListItems = [
 		primaryText="退出登录"
 		leftIcon={<Exit/>}
 		key={2}
+		onClick={handleLogOut}
 	/>
 ];
 
+function handleLogOut() {
+	reqwest({
+		url: '/api/logout',
+		method: 'POST',
+		type: 'json'
+	}).then(function (res) {
+		if(res.statusCode === 0){
+			window.location.href = '/login';
+		}else{
+			console.error(res.message);
+		}
+	}).fail(function (err) {
+		console.error(err);
+	});
+};
+
 export default React.createClass({
-	handleToggle: function () {
-		console.log('test');
-	},
 	render: function () {
 		return (
 			<ListItem primaryTogglesNestedList= {true}

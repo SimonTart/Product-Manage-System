@@ -25,7 +25,7 @@ app.use(session({
     secret: 'product',
     resave: true,
     saveUninitialized: false,
-    cookie: { /*secure: false,*/ maxAge: 24 * 60 * 60 }
+    cookie: { /*secure: false,*/ maxAge: 24 * 60 * 60*1000 }
 }));
 
 //set static resource

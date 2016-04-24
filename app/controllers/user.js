@@ -15,7 +15,7 @@ router.post('/', function (req, res) {
     
     if(req.session.l !== 1){
         res.json({
-            statusCode:2,
+            statusCode: -9,
             message: '请先登录'
         });
         return;
@@ -48,7 +48,7 @@ router.post('/', function (req, res) {
             sex: sex,
             addByUser: req.session.user._id
         };
-        var optionValue = ['postion', 'address', 'phone', 'birthday'];
+        var optionValue = ['postion', 'address', 'phone', 'birthday','authority'];
 
         optionValue.forEach(function (key) {
             var value = req.body[key];
@@ -94,6 +94,92 @@ router.post('/', function (req, res) {
 
 });
 
+router.get('/',function(req,res){
+    const stepLength = 25;
+    const page = req.query.page ? req.query.page:0;
+    if(req.session.l !== 1){
+        res.json({
+            statusCode: -9,
+            message: '请先登录'
+        });
+        return;
+    }
+    if(req.session.user.authority.indexOf(5) === -1){
+        res.json({
+            statusCode: -8,
+            message: '无权限'
+        });
+        return;
+    }
+    User.find()
+        .skip(page*stepLength)
+        .limit(stepLength)
+        .select('_id account name sex phone position address')
+        .exec()
+        .then(function(users){
+            res.json({
+                statusCode: 0,
+                users: users
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '查询失败'
+            });
+        });
+
+});
+router.post('/isAccountRepeat',function (req,res) {
+    var account = req.body.account;
+    if(req.session.l !== 1){
+        res.json({
+            statusCode: -9,
+            message: '请先登录'
+        });
+        return;
+    }
+    if(req.session.user.authority.indexOf(6) === -1){
+        res.json({
+           statusCode: -8 ,
+            message: '权限不够'
+        });
+        return;
+    }
+    if(account === ''){
+        res.json({
+            statusCode: 1,
+            message: '缺少必要参数'
+        });
+        return;
+    }
+    User.findOne({account:account})
+        .exec()
+        .then(function (user) {
+            if(user !== null ){
+                res.json({
+                    statusCode: 0,
+                    message: '账号已被占用',
+                    resultCode: 0
+                });
+            }else{
+                res.json({
+                    statusCode: 0,
+                    message: '账号可用',
+                    resultCode: 1
+                });
+            }
+
+        })
+        .catch(function (err) {
+           console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '服务暂时不可用'
+            });
+        });
+});
 function checkLength(str, min, max) {
     var len = str.length;
     return len >= min && len <= max;

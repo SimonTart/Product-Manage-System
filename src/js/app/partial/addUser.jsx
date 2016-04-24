@@ -1,11 +1,6 @@
 import React from 'react';
-import Card from 'material-ui/lib/card/card';
-import CardActions from 'material-ui/lib/card/card-actions';
-import CardHeader from 'material-ui/lib/card/card-header';
-import TextField from 'material-ui/lib/text-field';
 import Paper from 'material-ui/lib/paper';
 import Colors from 'material-ui/lib/styles/colors';
-import Divider from 'material-ui/lib/divider';
 import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
 import reqwest from 'reqwest';
@@ -44,6 +39,7 @@ const confirmBtnStyle = {
 const AddUser = React.createClass({
 	getInitialState: function () {
 		this.auth = [];
+        this.isAccountRepeat = false;
 		return {
 			message: '',
 			open: false,
@@ -69,9 +65,10 @@ const AddUser = React.createClass({
 			data: result,
 			type: 'json'
 		}).then(function (res) {
-			if (res.statuCode === 0) {
-
-			} else {
+            console.log(res);
+			if (res.statuCode === -9) {
+                window.location.href = '/login';
+			} else if(res.statusCode === 0) {
 
 			}
 			_this.alertMessage(res.message);
@@ -96,6 +93,10 @@ const AddUser = React.createClass({
 		};
 		var optionalValue = ['position', 'phone', 'birthday', 'address'];
 
+        if(this.isAccountRepeat){
+            this.alertMessage('该账号名已被占用');
+            return false;
+        }
 		if (account.length < 5 || account.length > 15) {
 			this.alertMessage('账号必须由5-15位大小写字母和数字组成');
 			return false;
@@ -117,7 +118,8 @@ const AddUser = React.createClass({
 			account: account,
 			password: password,
 			name: name,
-			sex: sex === 'man' ? 1 : 0
+			sex: sex === 'man' ? 1 : 0,
+			authority: JSON.stringify(this.auth)
 		};
 
 		optionalValue.forEach(function (value) {
@@ -166,7 +168,7 @@ const AddUser = React.createClass({
 			}
 		}
 	},
-	hendleProAuthBase: function () {
+	handleProAuthBase: function () {
 		if (this.state.productAuth === false) {
 			this.setState({
 				productAuth: true
@@ -184,7 +186,7 @@ const AddUser = React.createClass({
 			});
 		}
 	},
-	hendleUserAuthBase: function () {
+	handleUserAuthBase: function () {
 		if (this.state.userAuth === false) {
 			this.setState({
 				userAuth: true
@@ -202,7 +204,7 @@ const AddUser = React.createClass({
 			});
 		}
 	},
-	hendleOrderAuthBase: function () {
+	handleOrderAuthBase: function () {
 		if (this.state.orderAuth === false) {
 			this.setState({
 				orderAuth: true
@@ -220,10 +222,13 @@ const AddUser = React.createClass({
 			});
 		}
 	},
+    handleQueryAccount: function (isRepeat) {
+        this.isAccountRepeat = isRepeat;
+    },
 	render: function () {
 		const paperStyle = {
 			overflow: 'hidden'
-		}
+		};
 		const leftAreaStyle = {
 			paddingRight: 60,
 			paddingLeft: 60,
@@ -232,17 +237,17 @@ const AddUser = React.createClass({
 			float: 'left',
 			borderRight: '1px solid #efefef',
 			marginTop: 45
-		}
+		};
 		const titleStyle = {
 			paddingTop: 25,
 			textAlign: 'center',
 			fontWeight: 600,
 			fontSize: '24px',
 			color: Colors.blue500
-		}
+		};
 		const infoTitleStyle = {
-			fontSize: '20px',
-		}
+			fontSize: '20px'
+		};
 		const rightAreaStyle = {
 			paddingLeft: 60,
 			boxSizing: 'border-box',
@@ -250,20 +255,20 @@ const AddUser = React.createClass({
 			float: 'left',
 			marginTop: 45,
 			maxWidth: '60%'
-		}
+		};
 		const authTitleStyle = {
 			fontSize: '20px',
 			marginBottom: 25
-		}
+		};
 		const authToggleStyle = {
 			width: 'auto',
 			display: 'inline-block',
 			marginRight: 15,
 			marginBottom: 25
-		}
+		};
 		const authTypeTitleStyle = {
 			marginBottom: 15
-		}
+		};
 		return (
 			<div>
 				<Paper style={paperStyle}>
@@ -271,7 +276,10 @@ const AddUser = React.createClass({
 					<p style={titleStyle}>添加用户</p>
 					<div style={leftAreaStyle}>
 						<p style={infoTitleStyle}>用户信息填写</p>
-						<AccountTextField id="account"/>
+						<AccountTextField
+                            id="account"
+                            onQueryAccount = {this.handleQueryAccount}
+                        />
 						<br/>
 						<PasswordBox id="password"/>
 						<NameTextField id="name"/>
@@ -293,7 +301,7 @@ const AddUser = React.createClass({
 								label="查看商品信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.hendleProAuthBase}
+								onToggle={this.handleProAuthBase}
 								toggled = {this.state.productAuth}
 								/>
 							<Toggle
@@ -327,7 +335,7 @@ const AddUser = React.createClass({
 								label="查看用户信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.hendleUserAuthBase }
+								onToggle={this.handleUserAuthBase }
 								toggled={this.state.userAuth}
 								/>
 							<Toggle
@@ -355,7 +363,7 @@ const AddUser = React.createClass({
 								label="查看订单信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.hendleOrderAuthBase }
+								onToggle={this.handleOrderAuthBase }
 								toggled={this.state.orderAuth}
 								/>
 							<Toggle
@@ -403,7 +411,7 @@ const AddUser = React.createClass({
 						autoHideDuration={2000}
 						onRequestClose={this.handleMessageShow}
 						disabled={this.state.state === 'pending'}
-						/>
+					/>
 				</Paper>
 			</div>
 		);

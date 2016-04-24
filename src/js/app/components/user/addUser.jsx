@@ -1,10 +1,10 @@
 import React from 'react';
 import Colors from 'material-ui/lib/styles/colors';
 import TextField from 'material-ui/lib/text-field';
-import SelectField from 'material-ui/lib/select-field';
 import RadioButton from 'material-ui/lib/radio-button';
 import RadioButtonGroup from 'material-ui/lib/radio-button-group';
 import DatePicker from 'material-ui/lib/date-picker/date-picker';
+import reqwest from 'reqwest'
 
 import areIntlLocalesSupported from 'intl-locales-supported';
 
@@ -39,6 +39,37 @@ const AccountTextField = React.createClass({
 		}
 		this.setState({errorText:''});
 	},
+	handleAccountBlur: function (e) {
+		var account = e.target.value;
+		var accountLen = account.length;
+		if(accountLen <5 || accountLen>15 || /[^0-9a-zA-Z]/g.test(account)){
+			return;
+		}
+		var _this = this;
+		reqwest({
+			url: '/api/user/isAccountRepeat',
+			method: 'POST',
+			type:'json',
+			data: {
+				account: account
+			}
+		}).then(function (res) {
+			if(res.statusCode === -9){
+				window.location.href = '/login';
+				return;
+			}
+			if(res.statusCode === 0 && res.resultCode ===0){
+				_this.setState({
+					errorText: res.message
+				});
+				_this.props.onQueryAccount(true);
+			}else{
+				_this.props.onQueryAccount(false);
+			}
+		}).fail(function(err){
+			console.log(err);
+		});
+	},
 	render: function(){
 		return (
 			<TextField
@@ -50,6 +81,7 @@ const AccountTextField = React.createClass({
 		      onBlur={this.handleChange}
 		      onChange={this.handleChange}
 			  id={this.props.id}
+			  onBlur = {this.handleAccountBlur}
 		    />
 		);
 	}
