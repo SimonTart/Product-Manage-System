@@ -35,12 +35,6 @@ const paperBoxStyle = {
 	padding: '25px 30px 150px 25px'
 };
 
-const centerBoxStyle = {
-	display: 'inline-block',
-	position: 'relative',
-	left: '50%',
-	transform: 'translateX(-50%)'
-};
 
 const confirmBtnStyle = {
 	marginTop: 40,
@@ -59,12 +53,16 @@ const AddUser = React.createClass({
 		}
 	},
 	onSubmit: function () {
-		var result = this.checkInfo();
-		var _this = this;
-		if (!result || this.state.state === 'pending') {
+		if (this.state.state === 'pending') {
 			return;
 		}
 		this.setState({ state: 'pending' });
+		var result = this.checkInfo();
+		if(!result){
+			this.setState({ state: 'end' });
+			return;
+		}
+		var _this = this;
 		reqwest({
 			url: '/api/user',
 			method: 'POST',
@@ -145,8 +143,6 @@ const AddUser = React.createClass({
 	getHandleAuthoToggle: function (index) {
 		return function (event, value) {
 			var auth = this.auth;
-			this.setState({productAuth: true});
-			return;
 			if (value) {
 				this.auth.push(index);
 			} else {
@@ -155,20 +151,73 @@ const AddUser = React.createClass({
 			this.syncToggle(index);
 		}.bind(this)
 	},
-	syncToggle: function(index){
+	syncToggle: function (index) {
 		const authRange = {
 			product: [2, 3, 4, 5],
 			user: [7, 8, 9],
 			order: [11, 12, 13]
 		};
-		console.log(index);
-		for(var i in authRange){
-			if(authRange[i].indexOf(index)){
+		for (var i in authRange) {
+			if (authRange[i].indexOf(index) !== -1) {
 				var newObj = {};
-				newObj[i+'Auth'] = true;
+				newObj[i + 'Auth'] = true;
 				this.setState(newObj);
 				return;
 			}
+		}
+	},
+	hendleProAuthBase: function () {
+		if (this.state.productAuth === false) {
+			this.setState({
+				productAuth: true
+			});
+			return;
+		}
+		let productAuths = [2, 3, 4, 5];
+		let selectAuths = this.auth;
+		let checkResult = productAuths.some(function (authIndex) {
+			return selectAuths.indexOf(authIndex) !== -1
+		});
+		if(!checkResult){
+			this.setState({
+				productAuth: false
+			});
+		}
+	},
+	hendleUserAuthBase: function () {
+		if (this.state.userAuth === false) {
+			this.setState({
+				userAuth: true
+			});
+			return;
+		}
+		let userAuths = [7, 8, 9];
+		let selectAuths = this.auth;
+		let checkResult = userAuths.some(function (authIndex) {
+			return selectAuths.indexOf(authIndex) !== -1
+		});
+		if(!checkResult){
+			this.setState({
+				userAuth: false
+			});
+		}
+	},
+	hendleOrderAuthBase: function () {
+		if (this.state.orderAuth === false) {
+			this.setState({
+				orderAuth: true
+			});
+			return;
+		}
+		let orderAuths = [11, 12,13];
+		let selectAuths = this.auth;
+		let checkResult = orderAuths.some(function (authIndex) {
+			return selectAuths.indexOf(authIndex) !== -1
+		});
+		if(!checkResult){
+			this.setState({
+				orderAuth: false
+			});
 		}
 	},
 	render: function () {
@@ -218,6 +267,7 @@ const AddUser = React.createClass({
 		return (
 			<div>
 				<Paper style={paperStyle}>
+					<div style={{overflow:'hidden'}}>
 					<p style={titleStyle}>添加用户</p>
 					<div style={leftAreaStyle}>
 						<p style={infoTitleStyle}>用户信息填写</p>
@@ -234,22 +284,16 @@ const AddUser = React.createClass({
 						<br/>
 						<AddressTextField id="address"/>
 						<br/>
-						<RaisedButton
-							label={this.state.state === 'peding' ? '正在添加' : '添加'}
-							style={confirmBtnStyle}
-							secondary={true}
-							onClick={this.onSubmit}
-							/>
 					</div>
 					<div style={rightAreaStyle} onToggle={this.getHandleAuthoToggle(9) }>
 						<p style={authTitleStyle}>用户权限</p>
 						<div>
-							<p style={authTypeTitleStyle}>商品管理权限</p>
+							<p style={authTypeTitleStyle}>商品管理权限(查看商品权限是其他权限的基础) </p>
 							<Toggle
 								label="查看商品信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(1) }
+								onToggle={this.hendleProAuthBase}
 								toggled = {this.state.productAuth}
 								/>
 							<Toggle
@@ -283,7 +327,7 @@ const AddUser = React.createClass({
 								label="查看用户信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(6) }
+								onToggle={this.hendleUserAuthBase }
 								toggled={this.state.userAuth}
 								/>
 							<Toggle
@@ -311,7 +355,7 @@ const AddUser = React.createClass({
 								label="查看订单信息"
 								labelPosition="right"
 								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(10) }
+								onToggle={this.hendleOrderAuthBase }
 								toggled={this.state.orderAuth}
 								/>
 							<Toggle
@@ -340,8 +384,18 @@ const AddUser = React.createClass({
 								labelPosition="right"
 								style={authToggleStyle}
 								onToggle={this.getHandleAuthoToggle(14) }
-								/>
+							/>
 						</div>
+					</div>
+					<br clear="both"/>
+					</div>
+					<div style={{textAlign: 'center'}}>
+						<RaisedButton
+							label={this.state.state === 'peding' ? '正在添加' : '添加'}
+							style={confirmBtnStyle}
+							secondary={true}
+							onClick={this.onSubmit}
+						/>
 					</div>
 					<Snackbar
 						open={this.state.open}
