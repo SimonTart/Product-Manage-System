@@ -24,7 +24,6 @@ export default React.createClass({
                     <TableHeaderColumn>编号</TableHeaderColumn>
                     <TableHeaderColumn>订单名字</TableHeaderColumn>
                     <TableHeaderColumn>订单描述</TableHeaderColumn>
-                   
                     <TableHeaderColumn>编辑</TableHeaderColumn>
                     <TableHeaderColumn>删除</TableHeaderColumn>
                 </TableRow>

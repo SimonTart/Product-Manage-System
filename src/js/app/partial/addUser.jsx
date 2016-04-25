@@ -113,13 +113,23 @@ const AddUser = React.createClass({
 			this.alertMessage('姓名不能为空');
 			return false;
 		}
-
+		var authority = this.auth;
+		const specialAuthKeyValue = {
+			productAuth: 1,
+			userAuth:6,
+			orderAuth:10	
+		};
+		['productAuth','userAuth','orderAuth'].forEach(function(key){
+			if(this.state[key]){
+				authority.push(specialAuthKeyValue[key]);
+			}
+		}.bind(this));
 		var userInfo = {
 			account: account,
 			password: password,
 			name: name,
 			sex: sex === 'man' ? 1 : 0,
-			authority: JSON.stringify(this.auth)
+			authority: authority
 		};
 
 		optionalValue.forEach(function (value) {

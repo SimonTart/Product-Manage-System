@@ -12,15 +12,21 @@ router.post('/', function (req, res) {
     var password = req.body.password;
     var name = req.body.name;
     var sex = req.body.sex;
-    
-    if(req.session.l !== 1){
+
+    if (req.session.l !== 1) {
         res.json({
             statusCode: -9,
             message: '请先登录'
         });
         return;
     };
-    
+    if (req.session.user.authority.indexOf('6') === -1) {
+        res.json({
+            statusCode: -8,
+            message: '无权限'
+        });
+        return;
+    }
     if (!account || !password || name === '' || sex === '') {
         res.json({
             statusCode: 1,
@@ -48,7 +54,7 @@ router.post('/', function (req, res) {
             sex: sex,
             addByUser: req.session.user._id
         };
-        var optionValue = ['postion', 'address', 'phone', 'birthday','authority'];
+        var optionValue = ['postion', 'address', 'phone', 'birthday', 'authority'];
 
         optionValue.forEach(function (key) {
             var value = req.body[key];
@@ -56,7 +62,6 @@ router.post('/', function (req, res) {
                 user[key] = value;
             }
         });
-        console.log(user);
         return user;
     }
 
@@ -64,7 +69,6 @@ router.post('/', function (req, res) {
         .exec()
         .then(function (user) {
             if (user === null) {
-                console.log(getNewUser());
                 var newUser = new User(getNewUser());
                 return newUser.save();
             } else {
@@ -85,7 +89,7 @@ router.post('/', function (req, res) {
             }
         })
         .catch(function (err) {
-            console.log(err);
+            console.error(err);
             res.json({
                 statusCode: -1,
                 message: '服务出错'
@@ -94,32 +98,55 @@ router.post('/', function (req, res) {
 
 });
 
-router.get('/',function(req,res){
-    const stepLength = 25;
-    const page = req.query.page ? req.query.page:0;
-    if(req.session.l !== 1){
+router.get('/', function (req, res) {
+    const stepLength = 9;
+    const page = (req.query.page && req.query.page > 0) ? req.query.page - 1 : 0;
+    if (req.session.l !== 1) {
         res.json({
             statusCode: -9,
             message: '请先登录'
         });
         return;
     }
-    if(req.session.user.authority.indexOf(5) === -1){
+    if (req.session.user.authority.indexOf('5') === -1) {
         res.json({
             statusCode: -8,
             message: '无权限'
         });
         return;
     }
-    User.find()
-        .skip(page*stepLength)
+    var keyRegExp = /[\d\D]*/ig;
+    if (req.query.key) {
+        keyRegExp = new RegExp(req.query.key, 'ig');
+    }
+    var queryOpt = {
+        $or: [
+            {
+                account: keyRegExp
+            },
+            {
+                name: keyRegExp
+            },
+            {
+                position: keyRegExp
+            },
+            {
+                address: keyRegExp
+            }
+        ]
+    };
+    User.find(queryOpt)
+        .skip(page * stepLength)
         .limit(stepLength)
         .select('_id account name sex phone position address')
         .exec()
-        .then(function(users){
-            res.json({
-                statusCode: 0,
-                users: users
+        .then(function (users) {
+            User.count(queryOpt).then(function (count) {
+                res.json({
+                    statusCode: 0,
+                    users: users,
+                    pageNum: Math.ceil(count / stepLength)
+                });
             });
         })
         .catch(function (err) {
@@ -131,39 +158,82 @@ router.get('/',function(req,res){
         });
 
 });
-router.post('/isAccountRepeat',function (req,res) {
-    var account = req.body.account;
-    if(req.session.l !== 1){
+
+router.post('/delete', function (req, res) {
+    if (req.session.l !== 1) {
         res.json({
             statusCode: -9,
             message: '请先登录'
         });
         return;
     }
-    if(req.session.user.authority.indexOf(6) === -1){
+    if (req.session.user.authority.indexOf('8') === -1) {
         res.json({
-           statusCode: -8 ,
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+    if (!req.body.id) {
+        res.json({
+            statusCode: 0,
+            message: '缺少必要参数',
+            resultCode: 2
+        });
+        return;
+    }
+    User.findOne({ _id: req.body.id })
+        .remove()
+        .exec()
+        .then(function () {
+            console.log(arguments);
+            res.json({
+                statusCode: 0,
+                message: '删除成功',
+                resultCode: 0
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '删除失败',
+            });
+        });
+});
+router.post('/isAccountRepeat', function (req, res) {
+    var account = req.body.account;
+    if (req.session.l !== 1) {
+        res.json({
+            statusCode: -9,
+            message: '请先登录'
+        });
+        return;
+    }
+    if (req.session.user.authority.indexOf(6) === -1) {
+        res.json({
+            statusCode: -8,
             message: '权限不够'
         });
         return;
     }
-    if(account === ''){
+    if (account === '') {
         res.json({
             statusCode: 1,
             message: '缺少必要参数'
         });
         return;
     }
-    User.findOne({account:account})
+    User.findOne({ account: account })
         .exec()
         .then(function (user) {
-            if(user !== null ){
+            if (user !== null) {
                 res.json({
                     statusCode: 0,
                     message: '账号已被占用',
                     resultCode: 0
                 });
-            }else{
+            } else {
                 res.json({
                     statusCode: 0,
                     message: '账号可用',
@@ -173,13 +243,14 @@ router.post('/isAccountRepeat',function (req,res) {
 
         })
         .catch(function (err) {
-           console.error(err);
+            console.error(err);
             res.json({
                 statusCode: -1,
                 message: '服务暂时不可用'
             });
         });
 });
+
 function checkLength(str, min, max) {
     var len = str.length;
     return len >= min && len <= max;
