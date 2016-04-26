@@ -17,10 +17,16 @@ var UserSchema = new Schema({
 	authority: { type: Array },
 	birthday: { type: String },
 	addDate:{type:Date,default: Date.now},
-	modifyDate:{type:Date},
+	modifyDate:{type:Date,default: Date.now},
 	modifyByUser:{
 		type: Schema.Types.ObjectId,
-		ref: 'User'
+		ref: 'User',
+		required: true
+	},
+	isLogoff:{
+		type:Number,
+		default: 0,
+		require: true
 	}
 });
 /**

@@ -15,7 +15,7 @@ import {
 	PhoneTextField,
 	BirthdayPicker,
 	AddressTextField
-} from '../components/user/addUser.jsx';
+} from '../../components/user/addUser.jsx';
 
 
 const hintStyle = {
@@ -250,7 +250,7 @@ const AddUser = React.createClass({
 		};
 		const titleStyle = {
 			paddingTop: 25,
-			textAlign: 'center',
+			textAlign: 'left',
 			fontWeight: 600,
 			fontSize: '24px',
 			color: Colors.blue500

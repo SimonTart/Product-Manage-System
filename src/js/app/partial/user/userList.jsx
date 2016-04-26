@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from'react-router'
 import Table from 'material-ui/lib/table/table';
 import TableHeaderColumn from 'material-ui/lib/table/table-header-column';
 import TableRow from 'material-ui/lib/table/table-row';
@@ -10,6 +11,7 @@ import reqwest from 'reqwest';
 import TextField from 'material-ui/lib/text-field';
 import Dialog from 'material-ui/lib/dialog';
 import FlatButton from 'material-ui/lib/flat-button';
+import Snackbar from 'material-ui/lib/snackbar';
 
 
 var UserItem = React.createClass({
@@ -29,6 +31,8 @@ var UserItem = React.createClass({
                     <RaisedButton
                         label="查看详情"
                         secondary={true}
+                        linkButton={true}
+                        containerElement={<Link to={"/user/detail/" + this.props.user._id}/>}
                         />
                 </TableRowColumn>
                 <TableRowColumn>
@@ -65,13 +69,17 @@ export default React.createClass({
             type: 'json',
             data: data
         }).then(function (res) {
-            console.log(timeStamp + 'key');
+            if (res.statusCode === -9) {
+                window.location.href = '/login';
+            }
             if (res.statusCode === 0) {
                 this.setState({
                     users: res.users,
-                    pageNum: res.pageNum,
-                    page: 1
+                    pageNum: res.pageNum
                 });
+                if (!page) {
+                    this.setState({ page: 1 })
+                }
             }
         }.bind(this)).fail(function (err) {
             console.error(err);
@@ -83,7 +91,9 @@ export default React.createClass({
             deleteUser: {},
             confirmOpen: false,
             page: 1,
-            pageNum: 1
+            pageNum: 1,
+            messageOpen: false,
+            message: ''
         }
     },
     componentDidMount: function () {
@@ -105,6 +115,9 @@ export default React.createClass({
         });
     },
     handleDeleteUser: function () {
+        this.setState({
+            confirmOpen: false
+        });
         var deleteUser = this.state.deleteUser;
         reqwest({
             url: '/api/user/delete',
@@ -122,17 +135,32 @@ export default React.createClass({
                     users: users
                 });
             }
-            alert(res.message);
-            this.setState({
-                confirmOpen: false
-            });
+            this.alertMessage(res.message);
         }.bind(this)).fail(function (err) {
             console.error(err);
             alert('删除失败，请重试');
         }.bind(this));
     },
     handleNextPage: function () {
-        this.loadUser(this.searchKey, this.state.page + 1)
+        var page = this.state.page;
+        this.setState({ page: (page + 1) });
+        this.loadUser(this.searchKey, page + 1)
+    },
+    handlePrePage: function () {
+        var page = this.state.page;
+        this.setState({ page: (page - 1) });
+        this.loadUser(this.searchKey, page - 1)
+    },
+    handleRequestClose: function () {
+        this.setState({
+            messageOpen: false
+        });
+    },
+    alertMessage: function (message) {
+        this.setState({
+            messageOpen: true,
+            message: message
+        });
     },
     render: function () {
         const actions = [
@@ -202,6 +230,12 @@ export default React.createClass({
                     >
                     确认删除账号为{this.state.deleteUser.account}, 姓名为{this.state.deleteUser.name}的用户吗?
                 </Dialog>
+                <Snackbar
+                    open={this.state.messageOpen}
+                    message={this.state.message}
+                    autoHideDuration={2000}
+                    onRequestClose={this.handleRequestClose}
+                    />
             </div>
         );
     }

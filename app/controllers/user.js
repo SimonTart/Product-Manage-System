@@ -52,7 +52,8 @@ router.post('/', function (req, res) {
             password: utils.hashPassword(password),
             name: name,
             sex: sex,
-            addByUser: req.session.user._id
+            addByUser: req.session.user._id,
+            modifyByUser: req.session.user._id
         };
         var optionValue = ['postion', 'address', 'phone', 'birthday', 'authority'];
 
@@ -65,7 +66,7 @@ router.post('/', function (req, res) {
         return user;
     }
 
-    User.findOne({ account: account })
+    User.findOne({ account: account, isLogoff: 0 })
         .exec()
         .then(function (user) {
             if (user === null) {
@@ -122,16 +123,20 @@ router.get('/', function (req, res) {
     var queryOpt = {
         $or: [
             {
-                account: keyRegExp
+                account: keyRegExp,
+                isLogoff: 0
             },
             {
-                name: keyRegExp
+                name: keyRegExp,
+                isLogoff: 0
             },
             {
-                position: keyRegExp
+                position: keyRegExp,
+                isLogoff: 0
             },
             {
-                address: keyRegExp
+                address: keyRegExp,
+                isLogoff: 0
             }
         ]
     };
@@ -183,10 +188,15 @@ router.post('/delete', function (req, res) {
         return;
     }
     User.findOne({ _id: req.body.id })
-        .remove()
+        .update({
+            $set: {
+                isLogoff: 1,
+                modifyByUser: req.session.user._id,
+                modifyDate: new Date()
+            }
+        })
         .exec()
         .then(function () {
-            console.log(arguments);
             res.json({
                 statusCode: 0,
                 message: '删除成功',
@@ -201,6 +211,28 @@ router.post('/delete', function (req, res) {
             });
         });
 });
+
+router.get('/detail/:id', function (req, res) {
+    var id = req.params.id;
+    User.findOne({ _id: id }, { password: 0 })
+        .populate({
+            path: 'addByUser',
+            select: '_id name'
+        })
+        .populate({
+            path: 'modifyByUser',
+            select: '_id name'
+        })
+        .exec()
+        .then(function (user) {
+            res.json({
+                statusCode: 0,
+                user: user || {}
+            });
+        }).catch(function (err) {
+            console.error(err);
+        });
+});
 router.post('/isAccountRepeat', function (req, res) {
     var account = req.body.account;
     if (req.session.l !== 1) {
@@ -210,7 +242,7 @@ router.post('/isAccountRepeat', function (req, res) {
         });
         return;
     }
-    if (req.session.user.authority.indexOf(6) === -1) {
+    if (req.session.user.authority.indexOf('6') === -1) {
         res.json({
             statusCode: -8,
             message: '权限不够'
@@ -224,7 +256,7 @@ router.post('/isAccountRepeat', function (req, res) {
         });
         return;
     }
-    User.findOne({ account: account })
+    User.findOne({ account: account, isLogoff: 0 })
         .exec()
         .then(function (user) {
             if (user !== null) {
