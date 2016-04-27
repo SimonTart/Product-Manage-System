@@ -37,6 +37,10 @@ var UserSchema = new Schema({
  * 13-> 查看报表
  * **/
 
+ /**
+  * sex 1-> woman 0->man
+  */
+
 UserSchema.statics = {
 	add: function () {
 

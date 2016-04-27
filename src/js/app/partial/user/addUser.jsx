@@ -45,7 +45,8 @@ const AddUser = React.createClass({
 			open: false,
 			productAuth: false,
 			userAuth: false,
-			orderAuth: false
+			orderAuth: false,
+			sex: 0
 		}
 	},
 	onSubmit: function () {
@@ -54,7 +55,7 @@ const AddUser = React.createClass({
 		}
 		this.setState({ state: 'pending' });
 		var result = this.checkInfo();
-		if(!result){
+		if (!result) {
 			this.setState({ state: 'end' });
 			return;
 		}
@@ -68,7 +69,7 @@ const AddUser = React.createClass({
             console.log(res);
 			if (res.statuCode === -9) {
                 window.location.href = '/login';
-			} else if(res.statusCode === 0) {
+			} else if (res.statusCode === 0) {
 
 			}
 			_this.alertMessage(res.message);
@@ -89,11 +90,11 @@ const AddUser = React.createClass({
 			position: document.querySelector('#position').value,
 			phone: document.querySelector('#phone').value,
 			birthday: this.state.birthday,
-			address: document.querySelector('#address')
+			address: document.querySelector('#address').value
 		};
 		var optionalValue = ['position', 'phone', 'birthday', 'address'];
 
-        if(this.isAccountRepeat){
+        if (this.isAccountRepeat) {
             this.alertMessage('该账号名已被占用');
             return false;
         }
@@ -116,11 +117,11 @@ const AddUser = React.createClass({
 		var authority = this.auth;
 		const specialAuthKeyValue = {
 			productAuth: 1,
-			userAuth:6,
-			orderAuth:10	
+			userAuth: 6,
+			orderAuth: 10
 		};
-		['productAuth','userAuth','orderAuth'].forEach(function(key){
-			if(this.state[key]){
+		['productAuth', 'userAuth', 'orderAuth'].forEach(function (key) {
+			if (this.state[key]) {
 				authority.push(specialAuthKeyValue[key]);
 			}
 		}.bind(this));
@@ -128,13 +129,13 @@ const AddUser = React.createClass({
 			account: account,
 			password: password,
 			name: name,
-			sex: sex === 'man' ? 1 : 0,
-			authority: authority
+			sex: sex,
+			authority: JSON.stringify(authority)
 		};
 
 		optionalValue.forEach(function (value) {
 			if (optionalValueCollection[value]) {
-				userInfo[value] = value;
+				userInfo[value] = optionalValueCollection[value];
 			}
 		});
 		return userInfo;
@@ -158,7 +159,7 @@ const AddUser = React.createClass({
 			if (value) {
 				this.auth.push(index);
 			} else {
-				this.auth.splice(auth.indexOf(index))
+				this.auth.splice(auth.indexOf(index), 1)
 			}
 			this.syncToggle(index);
 		}.bind(this)
@@ -190,7 +191,7 @@ const AddUser = React.createClass({
 		let checkResult = productAuths.some(function (authIndex) {
 			return selectAuths.indexOf(authIndex) !== -1
 		});
-		if(!checkResult){
+		if (!checkResult) {
 			this.setState({
 				productAuth: false
 			});
@@ -208,7 +209,7 @@ const AddUser = React.createClass({
 		let checkResult = userAuths.some(function (authIndex) {
 			return selectAuths.indexOf(authIndex) !== -1
 		});
-		if(!checkResult){
+		if (!checkResult) {
 			this.setState({
 				userAuth: false
 			});
@@ -221,12 +222,12 @@ const AddUser = React.createClass({
 			});
 			return;
 		}
-		let orderAuths = [11, 12,13];
+		let orderAuths = [11, 12, 13];
 		let selectAuths = this.auth;
 		let checkResult = orderAuths.some(function (authIndex) {
 			return selectAuths.indexOf(authIndex) !== -1
 		});
-		if(!checkResult){
+		if (!checkResult) {
 			this.setState({
 				orderAuth: false
 			});
@@ -282,138 +283,138 @@ const AddUser = React.createClass({
 		return (
 			<div>
 				<Paper style={paperStyle}>
-					<div style={{overflow:'hidden'}}>
-					<p style={titleStyle}>添加用户</p>
-					<div style={leftAreaStyle}>
-						<p style={infoTitleStyle}>用户信息填写</p>
-						<AccountTextField
-                            id="account"
-                            onQueryAccount = {this.handleQueryAccount}
-                        />
-						<br/>
-						<PasswordBox id="password"/>
-						<NameTextField id="name"/>
-						<br/>
-						<SexSelectField onChange={this.onSexChange}/>
-						<BirthdayPicker onChange={this.handleBirthdayChange}/>
-						<PhoneTextField id="phone"/>
-						<br/>
-						<PostionTextField id="position"/>
-						<br/>
-						<AddressTextField id="address"/>
-						<br/>
+					<div style={{ overflow: 'hidden' }}>
+						<p style={titleStyle}>添加用户</p>
+						<div style={leftAreaStyle}>
+							<p style={infoTitleStyle}>用户信息填写</p>
+							<AccountTextField
+								id="account"
+								onQueryAccount = {this.handleQueryAccount}
+								/>
+							<br/>
+							<PasswordBox id="password"/>
+							<NameTextField id="name"/>
+							<br/>
+							<SexSelectField onChange={this.onSexChange} defaultValue='0'/>
+							<BirthdayPicker onChange={this.handleBirthdayChange}/>
+							<PhoneTextField id="phone"/>
+							<br/>
+							<PostionTextField id="position"/>
+							<br/>
+							<AddressTextField id="address"/>
+							<br/>
+						</div>
+						<div style={rightAreaStyle} onToggle={this.getHandleAuthoToggle(9) }>
+							<p style={authTitleStyle}>用户权限</p>
+							<div>
+								<p style={authTypeTitleStyle}>商品管理权限(查看商品权限是其他权限的基础) </p>
+								<Toggle
+									label="查看商品信息"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.handleProAuthBase}
+									toggled = {this.state.productAuth}
+									/>
+								<Toggle
+									label="添加商品"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(2) }
+									/>
+								<Toggle
+									label="编辑商品"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(3) }
+									/>
+								<Toggle
+									label="删除商品"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(4) }
+									/>
+								<Toggle
+									label="出售商品"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(5) }
+									/>
+							</div>
+							<div>
+								<p style={authTypeTitleStyle}>用户管理权限(查看用户权限是其他权限的基础)</p>
+								<Toggle
+									label="查看用户信息"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.handleUserAuthBase }
+									toggled={this.state.userAuth}
+									/>
+								<Toggle
+									label="添加用户"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(7) }
+									/>
+								<Toggle
+									label="修改用户信息"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(8) }
+									/>
+								<Toggle
+									label="删除用户"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(9) }
+									/>
+							</div>
+							<div>
+								<p style={authTypeTitleStyle}>订单管理权限(查看订单权限是其他权限的基础)</p>
+								<Toggle
+									label="查看订单信息"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.handleOrderAuthBase }
+									toggled={this.state.orderAuth}
+									/>
+								<Toggle
+									label="新建订单"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(11) }
+									/>
+								<Toggle
+									label="编辑订单"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(12) }
+									/>
+								<Toggle
+									label="删除订单"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(13) }
+									/>
+							</div>
+							<div>
+								<p style={authTypeTitleStyle}>报表管理权限</p>
+								<Toggle
+									label="查看报表"
+									labelPosition="right"
+									style={authToggleStyle}
+									onToggle={this.getHandleAuthoToggle(14) }
+									/>
+							</div>
+						</div>
+						<br clear="both"/>
 					</div>
-					<div style={rightAreaStyle} onToggle={this.getHandleAuthoToggle(9) }>
-						<p style={authTitleStyle}>用户权限</p>
-						<div>
-							<p style={authTypeTitleStyle}>商品管理权限(查看商品权限是其他权限的基础) </p>
-							<Toggle
-								label="查看商品信息"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.handleProAuthBase}
-								toggled = {this.state.productAuth}
-								/>
-							<Toggle
-								label="添加商品"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(2) }
-								/>
-							<Toggle
-								label="编译商品"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(3) }
-								/>
-							<Toggle
-								label="删除商品"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(4) }
-								/>
-							<Toggle
-								label="出售商品"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(5) }
-								/>
-						</div>
-						<div>
-							<p style={authTypeTitleStyle}>用户管理权限</p>
-							<Toggle
-								label="查看用户信息"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.handleUserAuthBase }
-								toggled={this.state.userAuth}
-								/>
-							<Toggle
-								label="添加用户"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(7) }
-								/>
-							<Toggle
-								label="修改用户信息"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(8) }
-								/>
-							<Toggle
-								label="删除用户"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(9) }
-								/>
-						</div>
-						<div>
-							<p style={authTypeTitleStyle}>订单管理权限</p>
-							<Toggle
-								label="查看订单信息"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.handleOrderAuthBase }
-								toggled={this.state.orderAuth}
-								/>
-							<Toggle
-								label="新建订单"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(11) }
-								/>
-							<Toggle
-								label="编辑订单"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(12) }
-								/>
-							<Toggle
-								label="删除订单"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(13) }
-								/>
-						</div>
-						<div>
-							<p style={authTypeTitleStyle}>报表管理权限</p>
-							<Toggle
-								label="查看报表"
-								labelPosition="right"
-								style={authToggleStyle}
-								onToggle={this.getHandleAuthoToggle(14) }
-							/>
-						</div>
-					</div>
-					<br clear="both"/>
-					</div>
-					<div style={{textAlign: 'center'}}>
+					<div style={{ textAlign: 'center' }}>
 						<RaisedButton
 							label={this.state.state === 'peding' ? '正在添加' : '添加'}
 							style={confirmBtnStyle}
 							secondary={true}
 							onClick={this.onSubmit}
-						/>
+							/>
 					</div>
 					<Snackbar
 						open={this.state.open}
@@ -421,7 +422,7 @@ const AddUser = React.createClass({
 						autoHideDuration={2000}
 						onRequestClose={this.handleMessageShow}
 						disabled={this.state.state === 'pending'}
-					/>
+						/>
 				</Paper>
 			</div>
 		);

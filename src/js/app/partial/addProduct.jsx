@@ -80,7 +80,6 @@ export default React.createClass({
                     <TextField
                         hintText="商品名字"
                         onChange={this.handleNameChange}
-                        errorText={this.state.nameErrorText}
                         style={textStyle}
                         />
                 </div>
@@ -89,8 +88,8 @@ export default React.createClass({
                     <TextField
                         hintText="商品价格"
                         style={textStyle}
-                        errorText={this.state.priceErrorText}
                         onChange={this.handlePriceChange}
+                         errorText="商品价格必须是数字"
                      />
                     <div style={{ display: 'inline-block' }}>RMB</div>
                 </div>
@@ -102,8 +101,11 @@ export default React.createClass({
                         defualt='0'
                         errorText={this.state.storeNumberErrorText}
                         onChange={this.handleStoreNumberChange}
+                        errorText="商品数量必须是数字"
+                        
                      />
                 </div>
+                <br/>
                 <div style={areaStyle}>
                     <div style={labelStyle}>商品照片：</div>
                     <input

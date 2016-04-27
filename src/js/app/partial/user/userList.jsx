@@ -32,11 +32,25 @@ var UserItem = React.createClass({
                         label="查看详情"
                         secondary={true}
                         linkButton={true}
-                        containerElement={<Link to={"/user/detail/" + this.props.user._id}/>}
+                        containerElement={
+                            <Link to={"/user/detail/" + this.props.user._id}
+                                params={{ user: this.props.user }}
+                                />
+                        }
                         />
                 </TableRowColumn>
                 <TableRowColumn>
-                    <RaisedButton label="编辑" secondary={true}/>
+                    <RaisedButton
+                        label="编辑"
+                        secondary={true}
+                        linkButton={true}
+                        style={{ textAlign: 'center' }}
+                        containerElement={
+                            <Link
+                                to={"/user/edit/" + this.props.user._id}
+                                />
+                        }
+                        />
                 </TableRowColumn>
                 <TableRowColumn>
                     <RaisedButton
@@ -98,6 +112,11 @@ export default React.createClass({
     },
     componentDidMount: function () {
         this.loadUser();
+    },
+    routerWillLeave: function (next) {
+        console.log(next);
+        var index = next.search.match(/^\?index=(\d+)$/)[1];
+        window.editUser = this.state.users[index];
     },
     handleSearchKeyChange: function (e) {
         this.searchKey = e.target.value;
@@ -196,12 +215,13 @@ export default React.createClass({
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
-                        {this.state.users.map(function (user) {
+                        {this.state.users.map(function (user, index) {
                             return (
                                 <UserItem
                                     user={user}
                                     key={user._id}
                                     clickDelete={this.handleClickDelete}
+                                    index={index}
                                     />
                             );
                         }.bind(this)) }

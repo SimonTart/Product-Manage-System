@@ -180,31 +180,31 @@ const UserDetail = React.createClass({
                                     label="查看商品信息"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('1') !== -1}
+                                    toggled={this.state.user.authority.indexOf(1) !== -1}
                                     />
                                 <Toggle
                                     label="添加商品"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('2') !== -1}
+                                    toggled={this.state.user.authority.indexOf(2) !== -1}
                                     />
                                 <Toggle
                                     label="编辑商品"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('3') !== -1}
+                                    toggled={this.state.user.authority.indexOf(3) !== -1}
                                     />
                                 <Toggle
                                     label="删除商品"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('4') !== -1}
+                                    toggled={this.state.user.authority.indexOf(4) !== -1}
                                     />
                                 <Toggle
                                     label="出售商品"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('5') !== -1}
+                                    toggled={this.state.user.authority.indexOf(5) !== -1}
                                     />
                             </div>
                             <div>
@@ -213,25 +213,25 @@ const UserDetail = React.createClass({
                                     label="查看用户信息"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('6') !== -1}
+                                    toggled={this.state.user.authority.indexOf(6) !== -1}
                                     />
                                 <Toggle
                                     label="添加用户"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('7') !== -1}
+                                    toggled={this.state.user.authority.indexOf(7) !== -1}
                                     />
                                 <Toggle
                                     label="修改用户信息"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('8') !== -1}
+                                    toggled={this.state.user.authority.indexOf(8) !== -1}
                                     />
                                 <Toggle
                                     label="删除用户"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('9') !== -1}
+                                    toggled={this.state.user.authority.indexOf(9) !== -1}
                                     />
                             </div>
                             <div>
@@ -240,25 +240,25 @@ const UserDetail = React.createClass({
                                     label="查看订单信息"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('10') !== -1}
+                                    toggled={this.state.user.authority.indexOf(10) !== -1}
                                     />
                                 <Toggle
                                     label="新建订单"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('11') !== -1}
+                                    toggled={this.state.user.authority.indexOf(11) !== -1}
                                     />
                                 <Toggle
                                     label="编辑订单"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('12') !== -1}
+                                    toggled={this.state.user.authority.indexOf(12) !== -1}
                                     />
                                 <Toggle
                                     label="删除订单"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('13') !== -1}
+                                    toggled={this.state.user.authority.indexOf(13) !== -1}
                                     />
                             </div>
                             <div>
@@ -267,7 +267,7 @@ const UserDetail = React.createClass({
                                     label="查看报表"
                                     labelPosition="right"
                                     style={authToggleStyle}
-                                    toggled={this.state.user.authority.indexOf('14') !== -1}
+                                    toggled={this.state.user.authority.indexOf(14) !== -1}
                                     />
                             </div>
                         </div>
