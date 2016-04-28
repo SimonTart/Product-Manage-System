@@ -32,8 +32,7 @@ var ProductItem = React.createClass({
                         linkButton={true}
                         containerElement={
                             <Link
-                                to="/product/detail/"
-                                params={{ id: this.props.product._id }}
+                                to={"/product/detail/" + this.props.product._id}
                                 />
                         }
                         />
@@ -46,8 +45,7 @@ var ProductItem = React.createClass({
                         style={{ textAlign: 'center' }}
                         containerElement={
                             <Link
-                                to="/product/edit/"
-                                params={{ id: this.props.product._id }}
+                                to={"/product/edit/" + this.props.product._id}
                                 />
                         }
                         />
@@ -128,31 +126,30 @@ export default React.createClass({
             confirmOpen: false
         });
     },
-    handleDeleteUser: function () {
+    handleDeleteProduct: function () {
         this.setState({
             confirmOpen: false
         });
-        var deleteUser = this.state.deleteUser;
+        var deleteProduct = this.state.deleteProduct;
         reqwest({
-            url: '/api/user/delete',
+            url: '/api/product/delete',
             method: 'POST',
             type: 'json',
             data: {
-                id: deleteUser._id
+                id: deleteProduct._id
             }
         }).then(function (res) {
             if (res.statusCode === 0 && res.resultCode === 0) {
-                var users = this.state.users.filter(function (user) {
-                    return user._id !== deleteUser._id;
+                var products = this.state.products.filter(function (product) {
+                    return product._id !== deleteProduct._id;
                 });
                 this.setState({
-                    users: users
+                    products: products
                 });
             }
             this.alertMessage(res.message);
         }.bind(this)).fail(function (err) {
             console.error(err);
-            alert('删除失败，请重试');
         }.bind(this));
     },
     handleNextPage: function () {
@@ -186,7 +183,7 @@ export default React.createClass({
             <FlatButton
                 label="确定"
                 primary={true}
-                onClick={this.handleDeleteUser}
+                onClick={this.handleDeleteProduct}
                 />,
         ];
         return (
@@ -231,7 +228,9 @@ export default React.createClass({
                     label="下一页"
                     secondary={true}
                     onClick={this.handleCancelDelete}
-                    style={{ display: this.state.page === this.state.pageNum ? 'none' : 'inline-block' }}
+                    style={{
+                        display: (this.state.page === this.state.pageNum || this.state.pageNum === 0) ? 'none' : 'inline-block'
+                    }}
                     onClick={this.handleNextPage}
                     />
                 <Dialog

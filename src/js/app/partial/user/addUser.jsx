@@ -33,6 +33,7 @@ const paperBoxStyle = {
 
 const confirmBtnStyle = {
 	marginTop: 40,
+	marginBottom: 75,
 	width: 256
 }
 

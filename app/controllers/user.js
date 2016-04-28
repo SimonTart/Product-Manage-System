@@ -21,7 +21,7 @@ router.post('/', function (req, res) {
         return;
     };
 
-    if (req.session.user.authority.indexOf(6) === -1) {
+    if (req.session.user.authority.indexOf(7) === -1) {
         res.json({
             statusCode: -8,
             message: '无权限'
@@ -112,7 +112,7 @@ router.get('/', function (req, res) {
         });
         return;
     }
-    if (req.session.user.authority.indexOf(5) === -1) {
+    if (req.session.user.authority.indexOf(6) === -1) {
         res.json({
             statusCode: -8,
             message: '无权限'
@@ -183,7 +183,7 @@ router.post('/delete', function (req, res) {
         });
         return;
     }
-    if (req.session.user.authority.indexOf(8) === -1) {
+    if (req.session.user.authority.indexOf(9) === -1) {
         res.json({
             statusCode: -8,
             message: '没有权限'
@@ -298,7 +298,7 @@ router.post('/modify', function (req, res) {
 });
 
 router.get('/detail/:id', function (req, res) {
-    if (req.session.user.authority.indexOf(5) === -1) {
+    if (req.session.user.authority.indexOf(6) === -1) {
         res.json({
             statusCode: -8,
             message: '无权限'

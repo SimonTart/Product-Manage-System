@@ -7,6 +7,7 @@ module.exports = function (app) {
     app.use('/api/product', router);
 };
 
+//添加
 router.post('/', function (req, res) {
     if (req.session.user.authority.indexOf(2) === -1) {
         res.json({
@@ -52,6 +53,7 @@ router.post('/', function (req, res) {
         });
 });
 
+//查询
 router.get('/', function (req, res) {
     const stepLength = 9;
     const page = (req.query.page && req.query.page > 0) ? req.query.page - 1 : 0;
@@ -62,7 +64,7 @@ router.get('/', function (req, res) {
         });
         return;
     }
-    if (req.session.user.authority.indexOf(5) === -1) {
+    if (req.session.user.authority.indexOf(1) === -1) {
         res.json({
             statusCode: -8,
             message: '无权限'
@@ -92,6 +94,76 @@ router.get('/', function (req, res) {
             res.json({
                 statusCode: -1,
                 message: '查询失败'
+            });
+        });
+
+});
+
+//查询详情
+router.get('/:id', function (req, res) {
+    if (req.session.user.authority.indexOf(1) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+    let id = req.params.id;
+    Product.findOne({ _id: id })
+        .exec()
+        .then(function (product) {
+            res.json({
+                statusCode: 0,
+                resultCode: 0,
+                product: product
+            });
+        })
+        .catch(function (err) {
+            res.json({
+                statusCode: -1
+            });
+            console.error(err);
+        });
+
+});
+
+//删除
+router.post('/delete', function (req, res) {
+    if (req.session.user.authority.indexOf(4) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+    let id = req.body.id;
+    if (!id) {
+        res.json({
+            statusCode: 0,
+            resultCode: 2,
+            message: '缺少必要参数'
+        });
+        return;
+    }
+    Product.findOne({ _id: id })
+        .update({
+            $set: {
+                isLogoff: 1
+            }
+        })
+        .exec()
+        .then(function () {
+            res.json({
+                statusCode: 0,
+                resultCode: 0,
+                message: '删除成功'
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '服务出错'
             });
         });
 

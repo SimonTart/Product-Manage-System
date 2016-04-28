@@ -34,7 +34,6 @@ var UserItem = React.createClass({
                         linkButton={true}
                         containerElement={
                             <Link to={"/user/detail/" + this.props.user._id}
-                                params={{ user: this.props.user }}
                                 />
                         }
                         />
@@ -238,7 +237,9 @@ export default React.createClass({
                     label="下一页"
                     secondary={true}
                     onClick={this.handleCancelDelete}
-                    style={{ display: this.state.page === this.state.pageNum ? 'none' : 'inline-block' }}
+                    style={{ 
+                        display: (this.state.page === this.state.pageNum  || this.state.pageNum ===0 )? 'none' : 'inline-block' 
+                    }}
                     onClick={this.handleNextPage}
                     />
                 <Dialog
@@ -248,7 +249,7 @@ export default React.createClass({
                     modal={true}
                     actions={actions}
                     >
-                    确认删除账号为{this.state.deleteUser.account}, 姓名为{this.state.deleteUser.name}的用户吗?
+                    确认删除商品{this.state.deleteUser.name}吗?
                 </Dialog>
                 <Snackbar
                     open={this.state.messageOpen}

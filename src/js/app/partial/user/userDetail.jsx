@@ -131,6 +131,11 @@ const UserDetail = React.createClass({
         const infoLine = {
             marginBottom: 25
         }
+        const editBtnStyle = {
+            marginLeft: 58,
+            marginBottom: 75,
+            marginTop: 15
+        }
         return (
             <div>
                 <Paper style={paperStyle}>
@@ -138,14 +143,14 @@ const UserDetail = React.createClass({
                         <p style={titleStyle}>用户详细信息</p>
                         <div style={leftAreaStyle}>
                             <p style={infoLine}>用户基本资料</p>
-                            <p 
-                                color="red" 
+                            <p
+                                color="red"
                                 style={{
-                                    display:this.state.user.isLogoff!==1?'none':'block',
+                                    display: this.state.user.isLogoff !== 1 ? 'none' : 'block',
                                     color: 'red',
-                                    marginBottom:25
+                                    marginBottom: 25
                                 }}>
-                               该用户已被删除
+                                该用户已被删除
                             </p>
                             <p style={infoLine}>账号： {this.state.user.account}</p>
                             <p style={infoLine}>名字： {this.state.user.name}</p>
@@ -273,6 +278,14 @@ const UserDetail = React.createClass({
                             </div>
                         </div>
                         <br clear="both"/>
+                        <RaisedButton
+                            label="编辑用户"
+                            containerElement={
+                                <Link to={"/user/edit/" + this.props.params.id}/>
+                            }
+                            secondary={true}
+                            style={editBtnStyle}
+                            />
                     </div>
                 </Paper>
             </div>
