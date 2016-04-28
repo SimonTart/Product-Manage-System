@@ -5,18 +5,26 @@ import App from './main.jsx';
 import {AddUser} from './partial/user/addUser.jsx';
 import {UserDetail} from './partial/user/userDetail.jsx';
 import {EditUser} from './partial/user/editUser.jsx';
-import AddProduct from './partial/addProduct.jsx';
 import UserList from './partial/user/userList.jsx';
-import ProductList from './partial/productList.jsx';
+import AddProduct from './partial/product/addProduct.jsx';
+import ProductList from './partial/product/productList.jsx';
 import AddOrder from './partial/addOrder.jsx';
 
-const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 
+const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
+const Transition = React.createClass({
+	render: function(){
+		return (
+			<div>trnsition</div>
+		)	
+	}
+});
 const AppRouter = React.createClass({
 	render: function () {
 		return (
 			<Router history={AppHistory}>
 				<Route path="/" component={App}>
+					<Route path="/transition" component={Transition}/>
 					<Route path="/user/add" component={AddUser}/>
 					<Route path="/user/list" component={UserList}/>
 					<Route path="/user/detail/:id" component={UserDetail}/>

@@ -13,23 +13,25 @@ const secondListItems = [
     	primaryText="查找"
     	key={1}
     	leftIcon={<Search/>}
+		containerElement={<Link to="/product/list"/>}
     />,
-    <ListItem
-    	primaryText="修改"
-    	key={2}
-    	leftIcon={<ModeEdit/>}
-    />,
+    // <ListItem
+    // 	primaryText="修改"
+    // 	key={2}
+    // 	leftIcon={<ModeEdit/>}
+    // />,
 	<ListItem
     	primaryText="添加"
     	key={3}
     	leftIcon={<Add/>}
 		containerElement={<Link to="/product/add"/>}
-    />,
-	<ListItem
-    	primaryText="删除"
-    	key={4}
-    	leftIcon={<Delete/>}
     />
+	// ,
+	// <ListItem
+    // 	primaryText="删除"
+    // 	key={4}
+    // 	leftIcon={<Delete/>}
+    // />
 ];
 
 export default React.createClass({

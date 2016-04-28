@@ -101,7 +101,8 @@ const UserDetail = React.createClass({
             textAlign: 'left',
             fontWeight: 600,
             fontSize: '24px',
-            color: Colors.blue500
+            color: Colors.blue500,
+            marginLeft: 60
         };
         const infoTitleStyle = {
             fontSize: '20px'
@@ -136,7 +137,7 @@ const UserDetail = React.createClass({
                     <div style={{ overflow: 'hidden' }}>
                         <p style={titleStyle}>用户详细信息</p>
                         <div style={leftAreaStyle}>
-                            <p style={infoLine}>用户资料</p>
+                            <p style={infoLine}>用户基本资料</p>
                             <p 
                                 color="red" 
                                 style={{

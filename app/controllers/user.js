@@ -87,7 +87,8 @@ router.post('/', function (req, res) {
             } else {
                 res.json({
                     statusCode: 0,
-                    message: '添加成功'
+                    message: '添加成功',
+                     id: user._id
                 });
             }
         })
@@ -334,7 +335,7 @@ router.post('/isAccountRepeat', function (req, res) {
         });
         return;
     }
-    if (req.session.user.authority.indexOf('6') === -1) {
+    if (req.session.user.authority.indexOf(6) === -1) {
         res.json({
             statusCode: -8,
             message: '权限不够'

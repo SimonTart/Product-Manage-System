@@ -37,6 +37,9 @@ const confirmBtnStyle = {
 }
 
 const AddUser = React.createClass({
+	contextTypes: {
+		router: React.PropTypes.object.isRequired,
+    },
 	getInitialState: function () {
 		this.auth = [];
         this.isAccountRepeat = false;
@@ -70,11 +73,13 @@ const AddUser = React.createClass({
 			if (res.statuCode === -9) {
                 window.location.href = '/login';
 			} else if (res.statusCode === 0) {
-
+				setTimeout(() => {
+                    this.context.router.push('/user/detail/' + res.id);
+                }, 1000);
 			}
 			_this.alertMessage(res.message);
 			_this.setState({ state: 'end' });
-		}).fail(function (err, message) {
+		}.bind(this)).fail(function (err, message) {
 			_this.setState({ state: 'end' });
 			_this.alertMessage('网络错误，请重试');
 		})
@@ -254,7 +259,8 @@ const AddUser = React.createClass({
 			textAlign: 'left',
 			fontWeight: 600,
 			fontSize: '24px',
-			color: Colors.blue500
+			color: Colors.blue500,
+			marginLeft: 60
 		};
 		const infoTitleStyle = {
 			fontSize: '20px'
@@ -286,7 +292,7 @@ const AddUser = React.createClass({
 					<div style={{ overflow: 'hidden' }}>
 						<p style={titleStyle}>添加用户</p>
 						<div style={leftAreaStyle}>
-							<p style={infoTitleStyle}>用户信息填写</p>
+							<p style={infoTitleStyle}>用户基本信息</p>
 							<AccountTextField
 								id="account"
 								onQueryAccount = {this.handleQueryAccount}
@@ -341,7 +347,7 @@ const AddUser = React.createClass({
 									/>
 							</div>
 							<div>
-								<p style={authTypeTitleStyle}>用户管理权限(查看用户权限是其他权限的基础)</p>
+								<p style={authTypeTitleStyle}>用户管理权限(查看用户权限是其他权限的基础) </p>
 								<Toggle
 									label="查看用户信息"
 									labelPosition="right"
@@ -369,7 +375,7 @@ const AddUser = React.createClass({
 									/>
 							</div>
 							<div>
-								<p style={authTypeTitleStyle}>订单管理权限(查看订单权限是其他权限的基础)</p>
+								<p style={authTypeTitleStyle}>订单管理权限(查看订单权限是其他权限的基础) </p>
 								<Toggle
 									label="查看订单信息"
 									labelPosition="right"

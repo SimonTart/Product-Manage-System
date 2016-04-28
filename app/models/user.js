@@ -41,10 +41,4 @@ var UserSchema = new Schema({
   * sex 1-> woman 0->man
   */
 
-UserSchema.statics = {
-	add: function () {
-
-	}
-};
-
 mongoose.model('User', UserSchema);

@@ -37,6 +37,9 @@ const confirmBtnStyle = {
 }
 
 const EditUser = React.createClass({
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
     getInitialState: function () {
         var editUser = this.syncGetUser(this.props.params.id);
         //var editUser = JSON.parse(window.location.href.match(/\?user=({[\d\D]*})$/)[1]);
@@ -76,12 +79,11 @@ const EditUser = React.createClass({
             data: result,
             type: 'json'
         }).then(function (res) {
-            console.log(res);
             if (res.statuCode === -9) {
                 window.location.href = '/login';
             } else if (res.statusCode === 0) {
-                setTimeout(function () {
-                    window.location.redirect = "/#/user/detail/" + this.props.params.id
+                setTimeout(() => {
+                    this.context.router.push('/user/detail/' + this.props.params.id);
                 }, 1000);
             }
             this.alertMessage(res.message);
@@ -166,8 +168,6 @@ const EditUser = React.createClass({
     getHandleAuthoToggle: function (index) {
         return function (event, value) {
             var auth = this.auth;
-            console.log(index);
-            console.log(auth);
             if (value) {
                 this.auth.push(index);
             } else {
@@ -277,7 +277,8 @@ const EditUser = React.createClass({
             textAlign: 'left',
             fontWeight: 600,
             fontSize: '24px',
-            color: Colors.blue500
+            color: Colors.blue500,
+            marginLeft: 60
         };
         const infoTitleStyle = {
             fontSize: '20px'
@@ -311,9 +312,9 @@ const EditUser = React.createClass({
             <div>
                 <Paper style={paperStyle}>
                     <div style={{ overflow: 'hidden' }}>
-                        <p style={titleStyle}>添加用户</p>
+                        <p style={titleStyle}>修改用户信息</p>
                         <div style={leftAreaStyle}>
-                            <p style={infoTitleStyle}>用户信息填写</p>
+                            <p style={infoTitleStyle}>用户基本资料</p>
                             <AccountTextField
                                 id="account"
                                 onQueryAccount = {this.handleQueryAccount}
