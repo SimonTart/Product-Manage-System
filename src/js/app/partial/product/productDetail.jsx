@@ -57,6 +57,11 @@ export default React.createClass({
                     <div style={{ display: 'inline-block' }}>RMB</div>
                 </div>
                 <div style={areaStyle}>
+                    <div style={labelStyle}>商品折扣：</div>
+                    <span>{this.state.product.discount || '无'}</span>
+                    <div style={{ display: 'inline-block' }}>折</div>
+                </div>
+                <div style={areaStyle}>
                     <div style={labelStyle}>商品库存数量：</div>
                     <span>{this.state.product.storeNumber}</span>
                 </div>

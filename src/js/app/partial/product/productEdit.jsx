@@ -15,8 +15,10 @@ export default React.createClass({
             priceErrorText: '',
             totalNumberErrorText: '',
             storeNumberErrorText: '',
+            discountErrorText: '',
             name: product.name,
             price: product.price,
+            discount: product.discount || '',
             totalNumber: product.totalNumber,
             storeNumber: product.storeNumber,
             messageOpen: false,
@@ -61,6 +63,26 @@ export default React.createClass({
             return false;
         }
         this.setState({ priceErrorText: '' });
+    },
+    handleDiscountChange: function (e) {
+        var discount = e.target.value;
+        if (discount === '') {
+            this.setState({
+                discountErrorText: '',
+                discount: ''
+            });
+            return;
+        }
+        if (!/^[0-9](.\d){0,1}$/g.test(discount)) {
+            this.setState({
+                discountErrorText: '折扣只能在0-9之间，最多一位小数'
+            });
+            return;
+        }
+        this.setState({
+            discountErrorText: '',
+            discount: discount
+        })
     },
     handleTotalNumberChange: function (e) {
         var totalNumber = e.target.value;
@@ -114,12 +136,13 @@ export default React.createClass({
                 totalNumber: this.state.totalNumber,
                 price: this.state.price,
                 storeNumber: this.state.storeNumber,
-                id: this.state.product._id
+                id: this.state.product._id,
+                discount: this.state.discount
             }
         }).then((res) => {
             if (res.statusCode === 0 && res.resultCode === 0) {
                 this.alertMessage('修改成功');
-                setTimeout(()=>{
+                setTimeout(() => {
                     this.context.router.push('/product/detail/' + this.state.product._id);
                 }, 1500);
             } else {
@@ -189,6 +212,17 @@ export default React.createClass({
                         defaultValue={this.state.product.price}
                         />
                     <div style={{ display: 'inline-block' }}>RMB</div>
+                </div>
+                <div style={areaStyle}>
+                    <div style={labelStyle}>商品折扣：</div>
+                    <TextField
+                        hintText="商品折扣"
+                        style={textStyle}
+                        onChange={this.handleDiscountChange}
+                        errorText={this.state.discountErrorText}
+                        defaultValue={this.state.product.discount}
+                        />
+                    <div style={{ display: 'inline-block' }}>折</div>
                 </div>
                 <div style={areaStyle}>
                     <div style={labelStyle}>商品库存数量：</div>

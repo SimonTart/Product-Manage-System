@@ -46,7 +46,13 @@ export default React.createClass({
     },
     handleDiscountChange: function (e) {
         var discount = e.target.value;
-        
+        if(discount === ''){
+            this.setState({
+                discountErrorText: '',
+                discount: ''
+            });
+            return;
+        }
         if (!/^[0-9](.\d){0,1}$/g.test(discount)) {
             this.setState({
                 discountErrorText: '折扣只能在0-9之间，最多一位小数'

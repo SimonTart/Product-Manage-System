@@ -25,6 +25,7 @@ var ProductItem = React.createClass({
                 <TableRowColumn>{this.props.product.storeNumber}</TableRowColumn>
                 <TableRowColumn>{this.props.product.totalNumber}</TableRowColumn>
                 <TableRowColumn>{this.props.product.price}</TableRowColumn>
+                <TableRowColumn>{this.props.product.discount || '无'}</TableRowColumn>
                 <TableRowColumn>
                     <RaisedButton
                         label="查看详情"
@@ -199,6 +200,7 @@ export default React.createClass({
                             <TableHeaderColumn>商品库存</TableHeaderColumn>
                             <TableHeaderColumn>商品总量</TableHeaderColumn>
                             <TableHeaderColumn>商品价格</TableHeaderColumn>
+                            <TableHeaderColumn>折扣</TableHeaderColumn>
                             <TableHeaderColumn>查看详情</TableHeaderColumn>
                             <TableHeaderColumn>编辑</TableHeaderColumn>
                             <TableHeaderColumn>删除</TableHeaderColumn>

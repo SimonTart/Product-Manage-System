@@ -23,7 +23,7 @@ router.post('/', function (req, res) {
     if (!name ||
         !/^\d+(.\d){0,1}$/g.test(price) ||
         !/^\d+$/g.test(num) ||
-        !(discount && /^\d+(.\d){0,1}$/g.test(discount))
+        (discount && !/^\d+(.\d){0,1}$/g.test(discount))
     ) {
         res.json({
             statusCode: 0,
@@ -38,11 +38,10 @@ router.post('/', function (req, res) {
         totalNumber: num,
         storeNumber: num,
         addUser: req.session.user._id,
-        modifyUser: req.session.user._id
+        modifyUser: req.session.user._id,
+        discount: discount || ''
     }
-    if(discount){
-        newProduct.discount = discount;
-    }
+
     new Product(newProduct).save()
         .then((product) => {
             res.json({
@@ -191,12 +190,14 @@ router.post('/modify', function (req, res) {
     let storeNumber = req.body.storeNumber;
     let price = req.body.price;
     let name = req.body.name;
+    let discount = req.body.discount;
     if (!id ||
         !name ||
         !/^\d+$/g.test(totalNumber) ||
         !/^\d+$/g.test(storeNumber) ||
         parseInt(totalNumber) < parseInt(storeNumber) ||
-        !/^\d+(.\d){0,1}$/g.test(price)
+        !/^\d+(.\d){0,1}$/g.test(price) ||
+        (discount && !/^\d(.\d){0,1}$/g.test(discount))
     ) {
         res.json({
             statusCode: 0,
@@ -212,7 +213,8 @@ router.post('/modify', function (req, res) {
         name: name,
         price: price,
         modifyDate: new Date(),
-        modifyUser: req.session.user._id
+        modifyUser: req.session.user._id,
+        discount: discount || ''
     }
     Product.findOne({ _id: id })
         .update({ $set: newProduct })
