@@ -19,7 +19,12 @@ router.post('/', function (req, res) {
     let name = req.body.name;
     let num = req.body.number;
     let price = req.body.price;
-    if (!name || !/^\d+(.\d){0,1}$/g.test(price) || !/^\d+$/g.test(num)) {
+    let discount = req.body.discount;
+    if (!name ||
+        !/^\d+(.\d){0,1}$/g.test(price) ||
+        !/^\d+$/g.test(num) ||
+        !(discount && /^\d+(.\d){0,1}$/g.test(discount))
+    ) {
         res.json({
             statusCode: 0,
             resultCode: 2,
@@ -35,7 +40,9 @@ router.post('/', function (req, res) {
         addUser: req.session.user._id,
         modifyUser: req.session.user._id
     }
-
+    if(discount){
+        newProduct.discount = discount;
+    }
     new Product(newProduct).save()
         .then((product) => {
             res.json({
@@ -184,42 +191,44 @@ router.post('/modify', function (req, res) {
     let storeNumber = req.body.storeNumber;
     let price = req.body.price;
     let name = req.body.name;
-    if(!id ||
+    if (!id ||
         !name ||
         !/^\d+$/g.test(totalNumber) ||
         !/^\d+$/g.test(storeNumber) ||
         parseInt(totalNumber) < parseInt(storeNumber) ||
         !/^\d+(.\d){0,1}$/g.test(price)
-      ){
-          res.json({
-              statusCode: 0,
-              resultCode: -1,
-              message: '参数不合法'
-          })
-          return;
-      }
-      
-      let newProduct = {
-          totalNumber: totalNumber,
-          storeNumber: storeNumber,
-          name: name,
-          price: price
-      }
-      Product.findOne({_id: id})
-            .update({$set: newProduct})
-            .exec()
-            .then(function(product){
-                res.json({
-                    statusCode: 0,
-                    resultCode:0
-                });
-            })
-            .catch(function(err){
-               console.log(err);
-               res.json({
-                   statusCode: -1,
-                   messageL: '服务暂时无用'
-               }); 
+    ) {
+        res.json({
+            statusCode: 0,
+            resultCode: -1,
+            message: '参数不合法'
+        })
+        return;
+    }
+
+    let newProduct = {
+        totalNumber: totalNumber,
+        storeNumber: storeNumber,
+        name: name,
+        price: price,
+        modifyDate: new Date(),
+        modifyUser: req.session.user._id
+    }
+    Product.findOne({ _id: id })
+        .update({ $set: newProduct })
+        .exec()
+        .then(function (product) {
+            res.json({
+                statusCode: 0,
+                resultCode: 0
             });
+        })
+        .catch(function (err) {
+            console.log(err);
+            res.json({
+                statusCode: -1,
+                messageL: '服务暂时无用'
+            });
+        });
 
 });

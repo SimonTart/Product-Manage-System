@@ -6,20 +6,22 @@ import Polymer from 'material-ui/lib/svg-icons/action/polymer';
 import Add from 'material-ui/lib/svg-icons/content/add';
 import Delete from 'material-ui/lib/svg-icons/action/delete';
 import Search from 'material-ui/lib/svg-icons/action/search';
+import ShoppingCart from 'material-ui/lib/svg-icons/action/shopping-cart';
 import ModeEdit from 'material-ui/lib/svg-icons/editor/mode-edit';
 
 const secondListItems = [
+    <ListItem
+    	primaryText="出售"
+    	key={1}
+    	leftIcon={<ShoppingCart />}
+		containerElement={<Link to="/product/sale"/>}
+    />,
 	 <ListItem
     	primaryText="查找"
-    	key={1}
-    	leftIcon={<Search/>}
+    	key={2}
+    	leftIcon={<Search />}
 		containerElement={<Link to="/product/list"/>}
     />,
-    // <ListItem
-    // 	primaryText="修改"
-    // 	key={2}
-    // 	leftIcon={<ModeEdit/>}
-    // />,
 	<ListItem
     	primaryText="添加"
     	key={3}

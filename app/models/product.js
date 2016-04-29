@@ -9,7 +9,8 @@ var ProductSchema = new Schema({
 	modifyDate: { type: Date, required: true, default: Date.now },
 	addUser: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
 	modifyUser: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-	isLogoff: { type: Number, required: true, default: 0 }
+	isLogoff: { type: Number, required: true, default: 0 },
+	discount:{type: Number}
 });
 
 mongoose.model("Product", ProductSchema);

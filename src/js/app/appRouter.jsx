@@ -10,6 +10,7 @@ import AddProduct from './partial/product/addProduct.jsx';
 import ProductList from './partial/product/productList.jsx';
 import ProductDetail from './partial/product/productDetail.jsx';
 import ProductEdit from './partial/product/productEdit.jsx';
+import ProductSale from './partial/product/productSale.jsx'
 import AddOrder from './partial/addOrder.jsx';
 
 
@@ -32,6 +33,7 @@ const AppRouter = React.createClass({
 					<Route path="/user/detail/:id" component={UserDetail}/>
 					<Route path="/user/edit/:id" component={EditUser}/>
 					<Route path="/product/add" component={AddProduct} />
+					<Route path="/product/sale" component={ProductSale} />
 					<Route path="/product/list" component={ProductList}/>
 					<Route path="/product/detail/:id" component={ProductDetail}/>
 					<Route path="/product/edit/:id" component={ProductEdit}/>

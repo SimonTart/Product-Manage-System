@@ -13,8 +13,10 @@ export default React.createClass({
             nameErrorText: '商品名必填',
             priceErrorText: '商品价格必填',
             numberErrorText: '商品数量必填',
+            discountErrorText: '',
             name: '',
             price: '',
+            discount: '',
             messageOpen: false,
             message: ''
         };
@@ -42,6 +44,20 @@ export default React.createClass({
         }
         this.setState({ priceErrorText: '' });
     },
+    handleDiscountChange: function (e) {
+        var discount = e.target.value;
+        
+        if (!/^[0-9](.\d){0,1}$/g.test(discount)) {
+            this.setState({
+                discountErrorText: '折扣只能在0-9之间，最多一位小数'
+            });
+            return;
+        }
+        this.setState({
+            discountErrorText: '',
+            discount: discount
+        })
+    },
     handleNumberChange: function (e) {
         var num = e.target.value;
         this.setState({ number: num });
@@ -57,7 +73,10 @@ export default React.createClass({
         this.setState({ numberErrorText: '' });
     },
     handleSubmit: function () {
-        var result = this.state.nameErrorText || this.state.priceErrorText || this.state.numberErrorText;
+        var result =    this.state.nameErrorText || 
+                        this.state.priceErrorText || 
+                        this.state.numberErrorText ||
+                        this.state.discountErrorText;
         if (result) {
             this.alertMessage(result);
             return;
@@ -69,18 +88,19 @@ export default React.createClass({
             data: {
                 name: this.state.name,
                 number: this.state.number,
-                price: this.state.price
+                price: this.state.price,
+                discount: this.state.discount
             }
         }).then((res) => {
             if (res.statusCode === 0 && res.resultCode === 0) {
                 this.alertMessage('添加成功');
                 setTimeout(() => {
-                       this.context.router.push('/transition');
-                       this.context.router.push('/product/add');
+                    this.context.router.push('/transition');
+                    this.context.router.push('/product/add');
                 }, 1500);
             } else {
                 this.alertMessage(res.message);
-                if(res.statusCode === -9){
+                if (res.statusCode === -9) {
                     window.location.href = '/';
                 }
             }
@@ -134,6 +154,7 @@ export default React.createClass({
                         style={textStyle}
                         />
                 </div>
+                <br/>
                 <div style={areaStyle}>
                     <div style={labelStyle}>商品价格：</div>
                     <TextField
@@ -144,6 +165,19 @@ export default React.createClass({
                         />
                     <div style={{ display: 'inline-block' }}>RMB</div>
                 </div>
+                <br/>
+                <br/>
+                <div style={areaStyle}>
+                    <div style={labelStyle}>商品折扣：</div>
+                    <TextField
+                        hintText="商品折扣"
+                        style={textStyle}
+                        onChange={this.handleDiscountChange}
+                        errorText={this.state.discountErrorText}
+                        />
+                    <div style={{ display: 'inline-block' }}>折</div>
+                </div>
+                <br/>
                 <div style={areaStyle}>
                     <div style={labelStyle}>商品数量：</div>
                     <TextField
