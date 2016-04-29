@@ -15,8 +15,8 @@ export default React.createClass({
             priceErrorText: '',
             totalNumberErrorText: '',
             storeNumberErrorText: '',
-            name: '',
-            price: '',
+            name: product.name,
+            price: product.price,
             totalNumber: product.totalNumber,
             storeNumber: product.storeNumber,
             messageOpen: false,
@@ -97,7 +97,7 @@ export default React.createClass({
             this.setState({ storeNumberErrorText: '商品库存数量必须小于等于商品总数量' });
             return false;
         }
-        this.setState({ totalNumberErrorText: '' });
+        this.setState({ storeNumberErrorText: '' });
     },
     handleSubmit: function () {
         var result = this.state.nameErrorText || this.state.priceErrorText || this.state.numberErrorText;
@@ -106,20 +106,21 @@ export default React.createClass({
             return;
         }
         reqwest({
-            url: '/api/product',
+            url: '/api/product/modify',
             method: 'post',
             type: 'json',
             data: {
                 name: this.state.name,
-                number: this.state.number,
-                price: this.state.price
+                totalNumber: this.state.totalNumber,
+                price: this.state.price,
+                storeNumber: this.state.storeNumber,
+                id: this.state.product._id
             }
         }).then((res) => {
             if (res.statusCode === 0 && res.resultCode === 0) {
-                this.alertMessage('添加成功');
-                setTimeout(() => {
-                    this.context.router.push('/transition');
-                    this.context.router.push('/product/add');
+                this.alertMessage('修改成功');
+                setTimeout(()=>{
+                    this.context.router.push('/product/detail/' + this.state.product._id);
                 }, 1500);
             } else {
                 this.alertMessage(res.message);
@@ -166,7 +167,7 @@ export default React.createClass({
         }
         return (
             <div>
-                <p style={titleStyle}>添加商品</p>
+                <p style={titleStyle}>编辑商品</p>
                 <br />
                 <div style={areaStyle}>
                     <div style={labelStyle}>商品名字：</div>
@@ -211,7 +212,7 @@ export default React.createClass({
                 </div>
                 <br/>
                 <RaisedButton
-                    label="添加"
+                    label="修改"
                     secondary={true}
                     style={addBtnStyle}
                     onClick={this.handleSubmit}

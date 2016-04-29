@@ -168,3 +168,58 @@ router.post('/delete', function (req, res) {
         });
 
 });
+
+//修改
+router.post('/modify', function (req, res) {
+    if (req.session.user.authority.indexOf(3) == -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+
+    let id = req.body.id;
+    let totalNumber = req.body.totalNumber;
+    let storeNumber = req.body.storeNumber;
+    let price = req.body.price;
+    let name = req.body.name;
+    if(!id ||
+        !name ||
+        !/^\d+$/g.test(totalNumber) ||
+        !/^\d+$/g.test(storeNumber) ||
+        parseInt(totalNumber) < parseInt(storeNumber) ||
+        !/^\d+(.\d){0,1}$/g.test(price)
+      ){
+          res.json({
+              statusCode: 0,
+              resultCode: -1,
+              message: '参数不合法'
+          })
+          return;
+      }
+      
+      let newProduct = {
+          totalNumber: totalNumber,
+          storeNumber: storeNumber,
+          name: name,
+          price: price
+      }
+      Product.findOne({_id: id})
+            .update({$set: newProduct})
+            .exec()
+            .then(function(product){
+                res.json({
+                    statusCode: 0,
+                    resultCode:0
+                });
+            })
+            .catch(function(err){
+               console.log(err);
+               res.json({
+                   statusCode: -1,
+                   messageL: '服务暂时无用'
+               }); 
+            });
+
+});

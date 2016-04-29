@@ -57,12 +57,12 @@ export default React.createClass({
                     <div style={{ display: 'inline-block' }}>RMB</div>
                 </div>
                 <div style={areaStyle}>
-                    <div style={labelStyle}>商品总数量：</div>
-                    <span>{this.state.product.totalNumber}</span>
-                </div>
-                <div style={areaStyle}>
                     <div style={labelStyle}>商品库存数量：</div>
                     <span>{this.state.product.storeNumber}</span>
+                </div>
+                <div style={areaStyle}>
+                    <div style={labelStyle}>商品总数量：</div>
+                    <span>{this.state.product.totalNumber}</span>
                 </div>
                 <br/>
                 <RaisedButton
