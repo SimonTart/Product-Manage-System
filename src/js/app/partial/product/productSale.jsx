@@ -20,6 +20,9 @@ let SaleProductItem = React.createClass({
     handleDelete: function () {
         this.props.deleteProduct(this.props.index);
     },
+    desProduct: function () {
+        this.props.desProduct(this.props.index);
+    },
     render: function () {
         return (
             <TableRow>
@@ -30,6 +33,7 @@ let SaleProductItem = React.createClass({
                 <TableRowColumn style={{ width: 50, padding: '0 7px' }}>{this.props.product.subtotal}</TableRowColumn>
                 <TableRowColumn style={{ padding: '0 0' }}>
                     <IconButton
+                        onClick={this.desProduct}
                         >
                         <ContentRemove
                             color="#00bcd4"
@@ -59,6 +63,23 @@ let SaleList = React.createClass({
     },
     handleDeleteProduct: function (index) {
         this.props.deleteProduct(index);
+    },
+    handelDesProduct(index) {
+        this.props.desProduct(index);
+    },
+    saveSale: function () {
+        reqwest({
+            url: '/api/sale',
+            method: 'POST',
+            type: 'json',
+            data: {
+                products: this.props.selectProducts
+            }
+        }).then(function(res){
+            console.log(res);
+        }).fail(function(err){
+           console.error(err); 
+        });
     },
     render: function () {
         let width = '55%';
@@ -99,6 +120,7 @@ let SaleList = React.createClass({
                                     key={index}
                                     index={index}
                                     deleteProduct={this.handleDeleteProduct}
+                                    desProduct={this.handelDesProduct}
                                     />
                             }) }
                         </TableBody>
@@ -110,6 +132,7 @@ let SaleList = React.createClass({
                         label="完成"
                         secondary={true}
                         style={{ display: 'inline-block' }}
+                        onClick={this.saveSale}
                         />
                 </div>
             </div>
@@ -302,7 +325,35 @@ export default React.createClass({
         });
     },
     handleDeleteProduct: function (index) {
+        let selectProducts = this.state.selectProducts.slice();
+        let selectProductIds = this.state.selectProductIds.slice();
         console.log(index);
+        selectProducts.splice(index, 1);
+        selectProductIds.splice(index, 1);
+        this.setState({
+            selectProducts: selectProducts,
+            selectProductIds: selectProductIds
+        });
+    },
+    handelDesProduct: function (index) {
+        let selectProducts = this.state.selectProducts.slice();
+        let selectProductIds = this.state.selectProductIds.slice();
+        let product = selectProducts[index];
+        let num = --product.num;
+        let discount = product.discount || 10;
+
+        if (num <= 0) {
+            selectProducts.splice(index, 1);
+            selectProductIds.splice(index, 1);
+        } else {
+            product.subtotal = (product.price * discount * selectProducts[index].num / 10).toFixed(2);
+            selectProducts[index] = product;
+        }
+
+        this.setState({
+            selectProducts: selectProducts,
+            selectProductIds: selectProductIds
+        });
     },
     render: function () {
         const blockStyle = {
@@ -317,6 +368,7 @@ export default React.createClass({
                 <SaleList
                     products={this.state.selectProducts}
                     deleteProduct={this.handleDeleteProduct}
+                    desProduct={this.handelDesProduct}
                     />
             </div>
         );
