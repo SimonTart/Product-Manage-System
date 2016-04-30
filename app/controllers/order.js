@@ -23,10 +23,13 @@ router.post('/', function (req, res) {
             resultCode: 2,
             message: '缺少必要参数'
         });
+        return;
     }
     new Order({
         name: name,
-        description: description
+        description: description,
+        addUser: req.session.user._id,
+        modifyUser: req.session.user._id
     }).save()
         .then((order) => {
             res.json({

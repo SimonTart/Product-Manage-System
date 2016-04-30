@@ -6,6 +6,7 @@ var OrderSchema = new Schema({
     addDate: { type: Date, default: Date.now, required: true },
     modifyDate: { type: Date, default: Date.now, required: true },
     addUser: { type: Schema.Types.ObjectId, required: true },
-    modifyUse: { type: Schema.Types.ObjectId, required: true }
+    modifyUser: { type: Schema.Types.ObjectId, required: true },
+    orderProducts: [{ type: Schema.Types.ObjectId, ref: 'OrderProduct' }]
 });
 mongoose.model("Order", OrderSchema);

@@ -10,7 +10,7 @@ export default React.createClass({
     },
     getInitialState: function () {
         return {
-            nameErrorText: '必填',
+            nameErrorText: '商品名必填',
             name: '',
             descriptionErrorText: '',
             description: '',
@@ -45,6 +45,10 @@ export default React.createClass({
         })
     },
     handleSubmit: function () {
+        if (this.state.nameErrorText) {
+            this.alertMessage(this.state.nameErrorText);
+            return;
+        }
         reqwest({
             url: '/api/order',
             method: 'post',
@@ -62,7 +66,7 @@ export default React.createClass({
             }
             if (res.statusCode === 0 && res.resultCode === 0) {
                 setTimeout(() => {
-                    this.context.router.push('/');
+                    this.context.router.push('/orderdetail/' + res.id);
                 }, 1500);
             }
         }).catch((err) => {
