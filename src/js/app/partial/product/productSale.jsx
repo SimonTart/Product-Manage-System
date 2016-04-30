@@ -13,10 +13,14 @@ import ContentAdd from 'material-ui/lib/svg-icons/content/add';
 import ContentRemove from 'material-ui/lib/svg-icons/content/remove';
 import ActionDelete from 'material-ui/lib/svg-icons/action/delete';
 import IconButton from 'material-ui/lib/icon-button';
+import Snackbar from 'material-ui/lib/snackbar';
 
 
 
 let SaleProductItem = React.createClass({
+    contextTypes: {
+        router: React.PropTypes.object.isRequired
+    },
     handleDelete: function () {
         this.props.deleteProduct(this.props.index);
     },
@@ -28,7 +32,7 @@ let SaleProductItem = React.createClass({
             <TableRow>
                 <TableRowColumn style={{ width: 100, padding: '0 7px' }}>{this.props.product.name}</TableRowColumn>
                 <TableRowColumn style={{ width: 30, padding: '0 7px' }}>{this.props.product.price}</TableRowColumn>
-                <TableRowColumn style={{ width: 25, padding: '0 7px' }}>{this.props.product.discount}</TableRowColumn>
+                <TableRowColumn style={{ width: 25, padding: '0 7px' }}>{this.props.product.discount || '无'}</TableRowColumn>
                 <TableRowColumn style={{ width: 25, padding: '0 7px' }}>{this.props.product.num || 1}</TableRowColumn>
                 <TableRowColumn style={{ width: 50, padding: '0 7px' }}>{this.props.product.subtotal}</TableRowColumn>
                 <TableRowColumn style={{ padding: '0 0' }}>
@@ -73,12 +77,22 @@ let SaleList = React.createClass({
             method: 'POST',
             type: 'json',
             data: {
-                products: this.props.selectProducts
+                products: JSON.stringify(this.props.products)
             }
-        }).then(function(res){
-            console.log(res);
-        }).fail(function(err){
-           console.error(err); 
+        }).then((res) => {
+            this.props.alertMessage(res.message);
+            if (res.statusCode === - 9) {
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 1500)
+                return;
+            }
+            if (res.resultCode === 0 && res.statusCode === 0) {
+                this.props.saveSaleSuccess();
+                return;
+            }
+        }).fail(function (err) {
+            console.error(err);
         });
     },
     render: function () {
@@ -194,8 +208,9 @@ let ProductList = React.createClass({
             method: 'GET',
             type: 'json',
             data: data
-        }).then(function (res) {
+        }).then((res) => {
             if (res.statusCode === -9) {
+                this.props.alertMessage(res.message);
                 window.location.href = '/login';
             }
             if (res.statusCode === 0) {
@@ -207,7 +222,7 @@ let ProductList = React.createClass({
                     this.setState({ page: 1 })
                 }
             }
-        }.bind(this)).fail(function (err) {
+        }).fail(function (err) {
             console.error(err);
         })
     },
@@ -299,7 +314,9 @@ export default React.createClass({
     getInitialState: function () {
         return {
             selectProducts: [],
-            selectProductIds: []
+            selectProductIds: [],
+            message: '',
+            messageOpen: false
         }
     },
     handleAddProduct: function (product) {
@@ -355,6 +372,23 @@ export default React.createClass({
             selectProductIds: selectProductIds
         });
     },
+    handleRequestClose: function () {
+        this.setState({
+            messageOpen: false
+        })
+    },
+    alertMessage: function (message) {
+        this.setState({
+            message: message,
+            messageOpen: true
+        });
+    },
+    handleSaveSaleSuccess: function () {
+        this.setState({
+            selectProducts: [],
+            selectProductIds: []
+        })
+    },
     render: function () {
         const blockStyle = {
             marginLeft: '-5%',
@@ -364,11 +398,22 @@ export default React.createClass({
         }
         return (
             <div style={blockStyle}>
-                <ProductList addProduct={this.handleAddProduct}/>
+                <ProductList
+                    addProduct={this.handleAddProduct}
+                    alertMessage={this.alertMessage}
+                    />
                 <SaleList
                     products={this.state.selectProducts}
                     deleteProduct={this.handleDeleteProduct}
                     desProduct={this.handelDesProduct}
+                    alertMessage={this.alertMessage}
+                    saveSaleSuccess={this.handleSaveSaleSuccess}
+                    />
+                <Snackbar
+                    open={this.state.messageOpen}
+                    message={this.state.message}
+                    onRequestClose={this.handleRequestClose}
+                    autoHideDuration={1500}
                     />
             </div>
         );
