@@ -9,39 +9,30 @@ import Search from 'material-ui/lib/svg-icons/action/search';
 import ModeEdit from 'material-ui/lib/svg-icons/editor/mode-edit';
 
 const secondListItems = [
-	 <ListItem
-    	primaryText="查找"
-    	key={1}
-    	leftIcon={<Search/>}
-    />,
-    <ListItem
-    	primaryText="修改"
-    	key={2}
-    	leftIcon={<ModeEdit/>}
-    />,
 	<ListItem
-    	primaryText="添加"
-    	key={3}
-    	leftIcon={<Add/>}
-		containerElement={<Link to="/product/add"/>}
-    />,
+		primaryText="查找"
+		key={1}
+		leftIcon={<Search/>}
+		containerElement={<Link to="/order/list"/>}
+		/>,
 	<ListItem
-    	primaryText="删除"
-    	key={4}
-    	leftIcon={<Delete/>}
-    />
+		primaryText="添加"
+		key={2}
+		leftIcon={<Add/>}
+		containerElement={<Link to="/order/add"/>}
+		/>
 ];
 
 export default React.createClass({
-	render: function() {
+	render: function () {
 		return (
 			<ListItem primaryTogglesNestedList= {true}
 				leftIcon={<ContentPaste />}
 				primaryText = "订单"
 				nestedItems = {secondListItems}
-			>
+				>
 			</ListItem>
-	);
-}
+		);
+	}
 
 });

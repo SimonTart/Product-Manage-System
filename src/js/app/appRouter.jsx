@@ -11,7 +11,7 @@ import ProductList from './partial/product/productList.jsx';
 import ProductDetail from './partial/product/productDetail.jsx';
 import ProductEdit from './partial/product/productEdit.jsx';
 import ProductSale from './partial/product/productSale.jsx'
-import AddOrder from './partial/addOrder.jsx';
+import AddOrder from './partial/order/addOrder.jsx';
 
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
