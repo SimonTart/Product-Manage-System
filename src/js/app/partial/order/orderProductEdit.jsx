@@ -210,30 +210,6 @@ let SaleList = React.createClass({
     handelDesProduct(index) {
         this.props.desProduct(index);
     },
-    saveSale: function () {
-        reqwest({
-            url: '/api/sale',
-            method: 'POST',
-            type: 'json',
-            data: {
-                products: JSON.stringify(this.props.products)
-            }
-        }).then((res) => {
-            this.props.alertMessage(res.message);
-            if (res.statusCode === - 9) {
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 1500)
-                return;
-            }
-            if (res.resultCode === 0 && res.statusCode === 0) {
-                this.props.saveSaleSuccess();
-                return;
-            }
-        }).fail(function (err) {
-            console.error(err);
-        });
-    },
     render: function () {
         let width = '55%';
         if (window.innerWidth < 1024) {
@@ -253,7 +229,7 @@ let SaleList = React.createClass({
         return (
             <div style={blockStyle}>
                 <div style={innerStyle}>
-                    <p style={{ marginLeft: 15 }}>已购商品</p>
+                    <p style={{ marginLeft: 15 }}>订单商品清单</p>
                     <Table>
                         <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                             <TableRow>
@@ -269,19 +245,10 @@ let SaleList = React.createClass({
                                     key={index}
                                     index={index}
                                     deleteProduct={this.handleDeleteProduct}
-                                    desProduct={this.handelDesProduct}
                                     />
                             }) }
                         </TableBody>
                     </Table>
-                </div>
-                <div style={{ paddingTop: 30 }}>
-                    <FlatButton
-                        label="保存"
-                        secondary={true}
-                        style={{ display: 'inline-block' }}
-                        onClick={this.saveSale}
-                        />
                 </div>
             </div>
         );
@@ -447,10 +414,14 @@ let NumberInput = React.createClass({
 export default React.createClass({
     getInitialState: function () {
         let order = this.loadOrderSync(this.props.params.id).order;
+        let selectOrderProducts = order.orderProducts || [];
+        let selectProductIds = selectOrderProducts.map((product) => {
+            return product.productId;
+        });
         return {
             order: order,
-            selectProducts: order.orderProducts || [],
-            selectProductIds: [],
+            selectOrderProducts: selectOrderProducts, //订单清单中的商品
+            selectProductIds: selectProductIds, //订单清单选中的商品对应的商品的ID
             message: '',
             messageOpen: false,
             inputNumberOpen: false
@@ -478,34 +449,34 @@ export default React.createClass({
         });
     },
     handleDeleteProduct: function (index) {
-        let selectProducts = this.state.selectProducts.slice();
+        let selectOrderProducts = this.state.selectOrderProducts.slice();
         let selectProductIds = this.state.selectProductIds.slice();
-        selectProducts.splice(index, 1);
-        selectProductIds.splice(index, 1);
-        this.setState({
-            selectProducts: selectProducts,
-            selectProductIds: selectProductIds
-        });
-    },
-    handelDesProduct: function (index) {
-        let selectProducts = this.state.selectProducts.slice();
-        let selectProductIds = this.state.selectProductIds.slice();
-        let product = selectProducts[index];
-        let num = --product.num;
-        let discount = product.discount || 10;
 
-        if (num <= 0) {
-            selectProducts.splice(index, 1);
-            selectProductIds.splice(index, 1);
-        } else {
-            product.subtotal = (product.price * discount * selectProducts[index].num / 10).toFixed(2);
-            selectProducts[index] = product;
-        }
-
-        this.setState({
-            selectProducts: selectProducts,
-            selectProductIds: selectProductIds
-        });
+        reqwest({
+            url: '/api/order/' + this.props.params.id + '/product/delete',
+            method: 'post',
+            type: 'json',
+            data: {
+                orderProductId: selectOrderProducts[index]._id
+            }
+        }).then((res) => {
+            if (res.statusCode === -9) {
+                this.alertMessage('请先登录');
+                window.lcoation.href = '/login';
+                return;
+            }
+            if (res.statusCode === 0 && res.resultCode === 0) {
+                selectOrderProducts.splice(index, 1);
+                selectProductIds.splice(index, 1);
+                this.setState({
+                    selectOrderProducts: selectOrderProducts,
+                    selectProductIds: selectProductIds
+                });
+            }
+            this.alertMessage(res.message);
+        }).catch((err) => {
+            console.error(err);
+        })
     },
     handleRequestClose: function () {
         this.setState({
@@ -520,7 +491,7 @@ export default React.createClass({
     },
     handleSaveSaleSuccess: function () {
         this.setState({
-            selectProducts: [],
+            selectOrderProducts: [],
             selectProductIds: []
         })
     },
@@ -535,16 +506,65 @@ export default React.createClass({
         });
         let product = this.state.addProduct;
         product.num = num;
-        let id = product._id;
-        let selectProducts = this.state.selectProducts.slice();
-        let selectProductIds = this.state.selectProductIds.slice();
-        selectProducts.unshift(product);
-        selectProductIds.unshift(product._id);
-        this.setState({
-            selectProducts: selectProducts,
-            selectProductIds: selectProductIds
-        });
+
+        reqwest({
+            url: '/api/order/' + this.props.params.id + '/product/add',
+            method: 'post',
+            type: 'json',
+            data: {
+                productId: product._id,
+                name: product.name,
+                num: product.num
+            }
+        }).then((res) => {
+            if (res.statusCode === -9) {
+                this.alertMessage('请先登录');
+                window.location.href = '/login';
+                return;
+            }
+            if (res.statusCode === 0 && res.resultCode === 0) {
+                let id = product._id;
+                let orderProduct = res.orderProduct;
+                let selectOrderProducts = this.state.selectOrderProducts.slice();
+                let selectProductIds = this.state.selectProductIds.slice();
+                selectOrderProducts.unshift(orderProduct);
+                selectProductIds.unshift(product._id);
+                this.setState({
+                    selectOrderProducts: selectOrderProducts,
+                    selectProductIds: selectProductIds
+                });
+            }
+            this.alertMessage(res.message);
+        }).fail((err) => {
+            console.error(err);
+        })
+
     },
+    // handleSaveOrder: function () {
+    //     let changeProducts = this.getChangeProducts();
+    // },
+    // getChangeProducts: function () {
+    //     let originOrderProducts = this.state.order.orderProducts.slice();
+    //     let originProductIds = originProducts.map((product) => {
+    //         return product.productId;
+    //     });
+
+    //     let selectProductIds = this.state.selectProductIds.slice();
+    //     let selectProducts = this.state.selectOrderProducts.slice();
+
+    //     let deleteProductIds = originProductIds.filter((id) => {
+    //         return selectProductIds.indexOf(id) === -1;
+    //     });
+
+    //     let addProducts = selectOrderProducts.filter((product) => {
+    //         return originProductIds.indexOf(product._id) === -1;
+    //     });
+
+    //     return {
+    //         deleteProductIds,
+    //         addProducts
+    //     };
+    // },
     render: function () {
         const blockStyle = {
             marginLeft: '-5%',
@@ -558,11 +578,9 @@ export default React.createClass({
                     order={this.state.order}
                     />
                 <SaleList
-                    products={this.state.selectProducts}
+                    products={this.state.selectOrderProducts}
                     deleteProduct={this.handleDeleteProduct}
-                    desProduct={this.handelDesProduct}
                     alertMessage={this.alertMessage}
-                    saveSaleSuccess={this.handleSaveSaleSuccess}
                     />
                 <ProductList
                     addProduct={this.handleAddProduct}
