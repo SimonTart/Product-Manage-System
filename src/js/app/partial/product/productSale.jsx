@@ -152,7 +152,7 @@ let SaleList = React.createClass({
             </div>
         );
     }
-})
+});
 
 let ProductItem = React.createClass({
     handleClickDelete: function () {
@@ -418,4 +418,4 @@ export default React.createClass({
             </div>
         );
     }
-})
+});

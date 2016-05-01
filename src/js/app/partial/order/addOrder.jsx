@@ -66,7 +66,7 @@ export default React.createClass({
             }
             if (res.statusCode === 0 && res.resultCode === 0) {
                 setTimeout(() => {
-                    this.context.router.push('/orderdetail/' + res.id);
+                    this.context.router.push('/orderproduct/edit/' + res.id);
                 }, 1500);
             }
         }).catch((err) => {

@@ -42,3 +42,31 @@ router.post('/', function (req, res) {
             console.error(err);
         })
 });
+
+router.get('/detail/:id', function (req, res) {
+    if (req.session.user.authority.indexOf(12) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+    let id = req.params.id;
+    Order.findOne({ _id: id })
+        .populate('orderProducts')
+        .exec()
+        .then(function (order) {
+            res.json({
+                statusCode: 0,
+                resultCode: 0,
+                order: order
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '失败'
+            });
+        })
+});
