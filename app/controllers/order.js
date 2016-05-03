@@ -47,6 +47,51 @@ router.post('/', function (req, res) {
         })
 });
 
+router.get('/', function (req, res) {
+    if (req.session.user.authority.indexOf(10) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '无权限'
+        });
+        return;
+    }
+
+    const stepLength = 9;
+    const page = (req.query.page && req.query.page > 0) ? req.query.page - 1 : 0;
+    let key = req.query.key || '';
+    let findOpt = {
+        name: new RegExp(key, 'ig'),
+        isLogoff: {
+            $lt: 1
+        }
+    };
+
+    Order.find(findOpt)
+        .skip(page * stepLength)
+        .limit(stepLength)
+        //.populate('orderProducts')
+        .exec()
+        .then(function (orders) {
+            console.log('find orders');
+            Order.count(findOpt).then(function (count) {
+                res.json({
+                    statusCode: 0,
+                    orders: orders,
+                    pageNum: Math.ceil(count / stepLength)
+                });
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '查询失败'
+            });
+        });
+
+
+});
+
 router.post('/:id/product/add', function (req, res) {
     if (req.session.user.authority.indexOf(12) === -1) {
         res.json({
@@ -153,8 +198,6 @@ router.post('/:id/product/delete', function (req, res) {
             })
         })
 });
-
-
 
 router.get('/detail/:id', function (req, res) {
     if (req.session.user.authority.indexOf(12) === -1) {

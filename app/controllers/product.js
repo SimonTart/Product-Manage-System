@@ -63,13 +63,7 @@ router.post('/', function (req, res) {
 router.get('/', function (req, res) {
     const stepLength = 9;
     const page = (req.query.page && req.query.page > 0) ? req.query.page - 1 : 0;
-    if (req.session.l !== 1) {
-        res.json({
-            statusCode: -9,
-            message: '请先登录'
-        });
-        return;
-    }
+    
     if (req.session.user.authority.indexOf(1) === -1) {
         res.json({
             statusCode: -8,

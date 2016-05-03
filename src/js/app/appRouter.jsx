@@ -12,12 +12,14 @@ import ProductDetail from './partial/product/productDetail.jsx';
 import ProductEdit from './partial/product/productEdit.jsx';
 import ProductSale from './partial/product/productSale.jsx'
 import AddOrder from './partial/order/addOrder.jsx';
-import OrderProductEdit from './partial/order/orderProductEdit.jsx'
+import OrderProductEdit from './partial/order/orderProductEdit.jsx';
+import OrderList from './partial/order/orderList.jsx';
+import OrderDetail from './partial/order/orderDetail.jsx';
 
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
 const Transition = React.createClass({
-	render: function(){
+	render: function () {
 		return (
 			<div>trnsition</div>
 		)
@@ -39,6 +41,8 @@ const AppRouter = React.createClass({
 					<Route path="/product/detail/:id" component={ProductDetail}/>
 					<Route path="/product/edit/:id" component={ProductEdit}/>
 					<Route path="/order/add" component={AddOrder} />
+					<Route path="/order/list" component={OrderList} />
+					<Route path="/order/detail/:id" component={OrderDetail} />
 					<Route path="/orderproduct/edit/:id" component={OrderProductEdit} />
 				</Route>
 			</Router>
