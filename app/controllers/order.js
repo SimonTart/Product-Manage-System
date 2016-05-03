@@ -72,7 +72,6 @@ router.get('/', function (req, res) {
         //.populate('orderProducts')
         .exec()
         .then(function (orders) {
-            console.log('find orders');
             Order.count(findOpt).then(function (count) {
                 res.json({
                     statusCode: 0,
@@ -90,6 +89,81 @@ router.get('/', function (req, res) {
         });
 
 
+});
+
+router.get('/:id/delete', function (req, res) {
+    let id = req.params.id;
+    Order.findOne({
+        _id: id,
+        isLogoff: {
+            $lt: 1
+        }
+    }).update({
+        $set: {
+            isLogoff: 1
+        }
+    }).exec()
+        .then((order) => {
+            res.json({
+                statusCode: 0,
+                resultCode: 0,
+                message: '删除成功'
+            })
+        }).catch((err) => {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '删除失败'
+            });
+        })
+});
+
+router.post('/modify', function (req, res) {
+    if (req.session.user.authority.indexOf(12) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
+    let name = req.body.name;
+    let id = req.body.id;
+    let description = req.body.description;
+
+    if (!id || !name) {
+        res.json({
+            statusCode: 0,
+            resultCode: 1,
+            message: '缺少必要参数'
+        });
+        return;
+    }
+
+    Order.findOne({
+        _id: id,
+        isLogoff: {
+            $lt: 1
+        }
+    }).update({
+        $set: {
+            name: name,
+            description: description
+        }
+    }).exec()
+        .then(function (order) {
+            res.json({
+                statusCode: 0,
+                resultCode: 0,
+                message: '修改成功'
+            });
+        })
+        .catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '修改失败'
+            });
+        })
 });
 
 router.post('/:id/product/add', function (req, res) {

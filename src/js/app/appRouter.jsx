@@ -15,6 +15,7 @@ import AddOrder from './partial/order/addOrder.jsx';
 import OrderProductEdit from './partial/order/orderProductEdit.jsx';
 import OrderList from './partial/order/orderList.jsx';
 import OrderDetail from './partial/order/orderDetail.jsx';
+import OrderEdit from './partial/order/orderEdit.jsx';
 
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
@@ -43,6 +44,7 @@ const AppRouter = React.createClass({
 					<Route path="/order/add" component={AddOrder} />
 					<Route path="/order/list" component={OrderList} />
 					<Route path="/order/detail/:id" component={OrderDetail} />
+					<Route path="/order/edit/:id" component={OrderEdit} />
 					<Route path="/orderproduct/edit/:id" component={OrderProductEdit} />
 				</Route>
 			</Router>

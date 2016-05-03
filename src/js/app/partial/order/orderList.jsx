@@ -48,12 +48,22 @@ var ProductItem = React.createClass({
                         label="编辑"
                         secondary={true}
                         linkButton={true}
-                        style={{ textAlign: 'center' }}
+                        style={{
+                            textAlign: 'center',
+                            display: this.props.order.isLogoff === 0 ? 'inline-block' : 'none'
+                        }}
                         containerElement={
                             <Link
                                 to={"/order/edit/" + this.props.order._id}
                                 />
                         }
+                        />
+                </TableRowColumn>
+                <TableRowColumn>
+                    <RaisedButton
+                        label="完成"
+                        secondary={true}
+                        onClick={this.handleFinish}
                         />
                 </TableRowColumn>
                 <TableRowColumn>
@@ -132,25 +142,22 @@ export default React.createClass({
             confirmOpen: false
         });
     },
-    handleDeleteProduct: function () {
+    handleDeleteOrder: function () {
         this.setState({
             confirmOpen: false
         });
-        var deleteProduct = this.state.deleteProduct;
+        var deleteOrder = this.state.deleteOrder;
         reqwest({
-            url: '/api/product/delete',
-            method: 'POST',
-            type: 'json',
-            data: {
-                id: deleteProduct._id
-            }
+            url: '/api/order/' + deleteOrder._id + '/delete',
+            method: 'GET',
+            type: 'json'
         }).then(function (res) {
             if (res.statusCode === 0 && res.resultCode === 0) {
-                var products = this.state.products.filter(function (product) {
-                    return product._id !== deleteProduct._id;
+                var orders = this.state.orders.filter(function (order) {
+                    return order._id !== deleteOrder._id;
                 });
                 this.setState({
-                    products: products
+                    orders: orders
                 });
             }
             this.alertMessage(res.message);
@@ -189,7 +196,7 @@ export default React.createClass({
             <FlatButton
                 label="确定"
                 primary={true}
-                onClick={this.handleDeleteProduct}
+                onClick={this.handleDeleteOrder}
                 />,
         ];
         return (
@@ -207,6 +214,7 @@ export default React.createClass({
                             <TableHeaderColumn>状态</TableHeaderColumn>
                             <TableHeaderColumn>查看详情</TableHeaderColumn>
                             <TableHeaderColumn>编辑订单</TableHeaderColumn>
+                            <TableHeaderColumn>修改订单状态</TableHeaderColumn>
                             <TableHeaderColumn>删除</TableHeaderColumn>
                         </TableRow>
                     </TableHeader>

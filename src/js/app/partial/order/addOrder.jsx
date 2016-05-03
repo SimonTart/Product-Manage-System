@@ -10,7 +10,7 @@ export default React.createClass({
     },
     getInitialState: function () {
         return {
-            nameErrorText: '商品名必填',
+            nameErrorText: '订单名必填',
             name: '',
             descriptionErrorText: '',
             description: '',
@@ -22,7 +22,7 @@ export default React.createClass({
         let name = e.target.value;
         this.setState({ name: name });
         if (name === '') {
-            this.setState({ nameErrorText: '商品名不能为空，必填' });
+            this.setState({ nameErrorText: '订单名不能为空，必填' });
             return;
         }
         this.setState({ nameErrorText: '' });
