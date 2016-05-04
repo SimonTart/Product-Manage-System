@@ -18,6 +18,9 @@ var ProductItem = React.createClass({
     handleClickDelete: function () {
         this.props.clickDelete(this.props.order);
     },
+    handleFinish: function () {
+        this.props.handleFinish(this.props.index);
+    },
     formatDate: function (date) {
         var addDate = new Date(date);
         var formatedDate = '';
@@ -63,6 +66,9 @@ var ProductItem = React.createClass({
                     <RaisedButton
                         label="完成"
                         secondary={true}
+                        style={{
+                            display: this.props.order.isLogoff === 0 ? 'inline-block' : 'none'
+                        }}
                         onClick={this.handleFinish}
                         />
                 </TableRowColumn>
@@ -70,6 +76,9 @@ var ProductItem = React.createClass({
                     <RaisedButton
                         label="删除"
                         primary={true}
+                        style={{
+                            display: this.props.order.isLogoff === 0 ? 'inline-block' : 'none'
+                        }}
                         onClick={this.handleClickDelete}
                         />
                 </TableRowColumn>
@@ -141,6 +150,25 @@ export default React.createClass({
         this.setState({
             confirmOpen: false
         });
+    },
+    handleFinishOrder: function (index) {
+        let orders = this.state.orders.slice();
+        let id = orders[index]._id;
+        reqwest({
+            url: '/api/order/' + id + '/finish',
+            method: 'GET',
+            type: 'json'
+        }).then((res) => {
+            this.alertMessage(res.message);
+            if (res.statusCode === -9) {
+                window.location.href = '/login';
+                return;
+            }
+            if (res.statusCode === 0 && res.resultCode === 0) {
+                orders[index].isLogoff = -1;
+                this.setState({ orders: orders });
+            }
+        })
     },
     handleDeleteOrder: function () {
         this.setState({
@@ -225,6 +253,7 @@ export default React.createClass({
                                     order={order}
                                     key={order._id}
                                     clickDelete={this.handleClickDelete}
+                                    handleFinish={this.handleFinishOrder}
                                     index={index}
                                     />
                             );

@@ -91,7 +91,46 @@ router.get('/', function (req, res) {
 
 });
 
+router.get('/:id/finish', function (req, res) {
+    if (req.session.user.authority.indexOf(13) === -1) {
+        res.json({
+            statusCode: -1,
+            message: '没有权限'
+        });
+        return;
+    }
+    let id = req.params.id;
+    Order.findOne({
+        _id: id,
+        isLogoff: 0
+    }).update({
+        $set: {
+            isLogoff: -1
+        }
+    }).exec()
+        .then(function (order) {
+            res.json({
+                statusCode: 0,
+                resultCode:0,
+                message: '修改成功'
+            });
+        }).catch(function (err) {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '修改失败'
+            });
+        })
+});
+
 router.get('/:id/delete', function (req, res) {
+    if (req.session.user.authority.indexOf(13) === -1) {
+        res.json({
+            statusCode: -8,
+            message: '没有权限'
+        });
+        return;
+    }
     let id = req.params.id;
     Order.findOne({
         _id: id,
@@ -204,7 +243,7 @@ router.post('/:id/product/add', function (req, res) {
             });
             console.error(err);
         }).then(function (id) {
-            return Order.findOne({ _id: req.params.id })
+            return Order.findOne({ _id: req.params.id, isLogoff: 0 })
                 .update({
                     modifyUser: req.session.user._id,
                     modifyDate: new Date(),
@@ -246,7 +285,10 @@ router.post('/:id/product/delete', function (req, res) {
         return;
     }
 
-    Order.findOne({ _id: req.params.id })
+    Order.findOne({
+        _id: req.params.id,
+        isLogoff: 0
+    })
         .update({
             $pull: { orderProduct: orderProductId }
         })
