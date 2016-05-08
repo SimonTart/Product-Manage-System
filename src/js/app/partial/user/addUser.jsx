@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/lib/raised-button';
 import Snackbar from 'material-ui/lib/snackbar';
 import reqwest from 'reqwest';
 import Toggle from 'material-ui/lib/toggle';
+import Pending from '../../components/pending.jsx';
 
 import {
 	AccountTextField,

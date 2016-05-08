@@ -15,20 +15,6 @@ const listItemStyle = {
 	fontWeight: 500
 };
 
-const secondListItems = [
-	<ListItem
-		primaryText="修改资料"
-		key={1}
-		leftIcon={<ModeEdit/>}
-		containerElement={<Link to="/test" />}
-	/>,
-	<ListItem
-		primaryText="退出登录"
-		leftIcon={<Exit/>}
-		key={2}
-		onClick={handleLogOut}
-	/>
-];
 
 function handleLogOut() {
 	reqwest({
@@ -36,9 +22,9 @@ function handleLogOut() {
 		method: 'POST',
 		type: 'json'
 	}).then(function (res) {
-		if(res.statusCode === 0){
+		if (res.statusCode === 0) {
 			window.location.href = '/login';
-		}else{
+		} else {
 			console.error(res.message);
 		}
 	}).fail(function (err) {
@@ -51,10 +37,23 @@ export default React.createClass({
 		return (
 			<ListItem primaryTogglesNestedList= {true}
 				leftAvatar={<Avatar backgroundColor={Colors.blue500} icon={<PermIdentity />} />}
-				primaryText = "SimonTart"
-				nestedItems = {secondListItems}
+				primaryText = {this.props.userName}
+				nestedItems = {[
+					<ListItem
+						primaryText="修改密码"
+						key={1}
+						leftIcon={<ModeEdit/>}
+						containerElement={<Link to={'/user/edit/' + this.props.userId} />}
+						/>,
+					<ListItem
+						primaryText="退出登录"
+						leftIcon={<Exit/>}
+						key={2}
+						onClick={handleLogOut}
+						/>
+				]}
 				style = {listItemStyle}
-			>
+				>
 			</ListItem>
 		);
 	}

@@ -9,14 +9,24 @@ import Report from '../components/left-nav/report.jsx';
 import {Link} from 'react-router';
 
 export default React.createClass({
-
-	render: function() {
+	render: function () {
 		return (<LeftNav>
-					<LoginUser/>
-					<Product/>
-					<User/>
-					<Order />
-					<Report />
-       			</LeftNav>);
+			<LoginUser
+				userName={this.props.user.name}
+				userId={this.props.user._id}
+				/>
+			<Product
+				user={this.props.user}
+				/>
+			<User
+				user={this.props.user}
+				/>
+			<Order
+				user={this.props.user}/>
+			<Report
+				user={this.props.user}
+				/>
+		</LeftNav>);
 	}
 });
+

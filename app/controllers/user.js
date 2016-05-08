@@ -88,7 +88,7 @@ router.post('/', function (req, res) {
                 res.json({
                     statusCode: 0,
                     message: '添加成功',
-                     id: user._id
+                    id: user._id
                 });
             }
         })
@@ -173,6 +173,14 @@ router.get('/', function (req, res) {
             });
         });
 
+});
+
+router.get('/current', function (req, res) {
+    res.json({
+        resultCode: 0,
+        statusCode: 0,
+        user: req.session.user
+    });
 });
 
 router.post('/delete', function (req, res) {

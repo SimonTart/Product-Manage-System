@@ -38,7 +38,7 @@ var ProductItem = React.createClass({
                         }
                         />
                 </TableRowColumn>
-                <TableRowColumn>
+                {this.props.isEdit ? (<TableRowColumn>
                     <RaisedButton
                         label="编辑"
                         secondary={true}
@@ -50,14 +50,14 @@ var ProductItem = React.createClass({
                                 />
                         }
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TableRowColumn>) : ''}
+                {this.props.isDelete ? (<TableRowColumn>
                     <RaisedButton
                         label="删除"
                         primary={true}
                         onClick={this.handleClickDelete}
                         />
-                </TableRowColumn>
+                </TableRowColumn>) : ''}
             </TableRow>
         );
     }
@@ -175,6 +175,9 @@ export default React.createClass({
         });
     },
     render: function () {
+        let authority = this.props.route.authority ||  [];
+        let isEdit = authority.indexOf(3) !== -1;
+        let isDelete = authority.indexOf(4) !== -1;
         const actions = [
             <FlatButton
                 label="取消"
@@ -202,8 +205,8 @@ export default React.createClass({
                             <TableHeaderColumn>商品价格</TableHeaderColumn>
                             <TableHeaderColumn>折扣</TableHeaderColumn>
                             <TableHeaderColumn>查看详情</TableHeaderColumn>
-                            <TableHeaderColumn>编辑</TableHeaderColumn>
-                            <TableHeaderColumn>删除</TableHeaderColumn>
+                            {isEdit ? (<TableHeaderColumn>编辑</TableHeaderColumn>) : ''}
+                            {isDelete ? (<TableHeaderColumn>删除</TableHeaderColumn>) : ''}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -214,6 +217,8 @@ export default React.createClass({
                                     key={product._id}
                                     clickDelete={this.handleClickDelete}
                                     index={index}
+                                    isDelete={isDelete}
+                                    isEdit={isEdit}
                                     />
                             );
                         }.bind(this)) }

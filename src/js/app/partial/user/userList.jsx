@@ -38,7 +38,7 @@ var UserItem = React.createClass({
                         }
                         />
                 </TableRowColumn>
-                <TableRowColumn>
+                {this.props.isEdit ? (<TableRowColumn>
                     <RaisedButton
                         label="编辑"
                         secondary={true}
@@ -50,14 +50,14 @@ var UserItem = React.createClass({
                                 />
                         }
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TableRowColumn>) : ''}
+                {this.props.isDelete ? (<TableRowColumn>
                     <RaisedButton
                         label="删除"
                         primary={true}
                         onClick={this.handleClickDelete}
                         />
-                </TableRowColumn>
+                </TableRowColumn>) : ''}
             </TableRow>
         );
     }
@@ -193,6 +193,9 @@ export default React.createClass({
                 onClick={this.handleDeleteUser}
                 />,
         ];
+        let authority = this.props.route.authority || [];
+        let isEdit = authority.indexOf(8) !== -1;
+        let isDelete = authority.indexOf(9) !== -1;
         return (
             <div>
                 <span>搜索：</span>
@@ -209,8 +212,8 @@ export default React.createClass({
                             <TableHeaderColumn>联系方式</TableHeaderColumn>
                             <TableHeaderColumn>住址</TableHeaderColumn>
                             <TableHeaderColumn>查看详情</TableHeaderColumn>
-                            <TableHeaderColumn>编辑</TableHeaderColumn>
-                            <TableHeaderColumn>删除</TableHeaderColumn>
+                            {isEdit ? (<TableHeaderColumn>编辑</TableHeaderColumn>) : ''}
+                            {isDelete ? (<TableHeaderColumn>删除</TableHeaderColumn>) : ''}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -221,6 +224,8 @@ export default React.createClass({
                                     key={user._id}
                                     clickDelete={this.handleClickDelete}
                                     index={index}
+                                    isDelete={isDelete}
+                                    isEdit={isEdit}
                                     />
                             );
                         }.bind(this)) }
@@ -237,8 +242,8 @@ export default React.createClass({
                     label="下一页"
                     secondary={true}
                     onClick={this.handleCancelDelete}
-                    style={{ 
-                        display: (this.state.page === this.state.pageNum  || this.state.pageNum ===0 )? 'none' : 'inline-block' 
+                    style={{
+                        display: (this.state.page === this.state.pageNum || this.state.pageNum === 0) ? 'none' : 'inline-block'
                     }}
                     onClick={this.handleNextPage}
                     />

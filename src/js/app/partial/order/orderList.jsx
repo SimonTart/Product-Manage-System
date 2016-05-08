@@ -46,7 +46,7 @@ var ProductItem = React.createClass({
                         }
                         />
                 </TableRowColumn>
-                <TableRowColumn>
+                {this.props.isEdit ? (<TableRowColumn>
                     <RaisedButton
                         label="编辑"
                         secondary={true}
@@ -61,8 +61,8 @@ var ProductItem = React.createClass({
                                 />
                         }
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TableRowColumn>) : ''}
+                {this.props.isEdit ? (<TableRowColumn>
                     <RaisedButton
                         label="完成"
                         secondary={true}
@@ -71,8 +71,8 @@ var ProductItem = React.createClass({
                         }}
                         onClick={this.handleFinish}
                         />
-                </TableRowColumn>
-                <TableRowColumn>
+                </TableRowColumn>) : ''}
+                {this.props.isDelete ? (<TableRowColumn>
                     <RaisedButton
                         label="删除"
                         primary={true}
@@ -81,7 +81,7 @@ var ProductItem = React.createClass({
                         }}
                         onClick={this.handleClickDelete}
                         />
-                </TableRowColumn>
+                </TableRowColumn>) : ''}
             </TableRow>
         );
     }
@@ -227,6 +227,9 @@ export default React.createClass({
                 onClick={this.handleDeleteOrder}
                 />,
         ];
+        let authority = this.props.route.authority;
+        let isEdit = authority.indexOf(12) !== -1;
+        let isDelete = authority.indexOf(13) !== -1;
         return (
             <div>
                 <span>搜索：</span>
@@ -241,9 +244,9 @@ export default React.createClass({
                             <TableHeaderColumn>添加日期</TableHeaderColumn>
                             <TableHeaderColumn>状态</TableHeaderColumn>
                             <TableHeaderColumn>查看详情</TableHeaderColumn>
-                            <TableHeaderColumn>编辑订单</TableHeaderColumn>
-                            <TableHeaderColumn>修改订单状态</TableHeaderColumn>
-                            <TableHeaderColumn>删除</TableHeaderColumn>
+                            {isEdit ? (<TableHeaderColumn>编辑订单</TableHeaderColumn>) : ''}
+                            {isEdit ? (<TableHeaderColumn>修改订单状态</TableHeaderColumn>) : ''}
+                            {isDelete ? (<TableHeaderColumn>删除</TableHeaderColumn>) : ''}
                         </TableRow>
                     </TableHeader>
                     <TableBody displayRowCheckbox={false}>
@@ -255,6 +258,8 @@ export default React.createClass({
                                     clickDelete={this.handleClickDelete}
                                     handleFinish={this.handleFinishOrder}
                                     index={index}
+                                    isEdit={isEdit}
+                                    isDelete={isDelete}
                                     />
                             );
                         }.bind(this)) }

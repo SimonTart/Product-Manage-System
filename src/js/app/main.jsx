@@ -7,12 +7,13 @@ import LeftNavBar from './partial/left-nav.jsx';
 injectTapEventPlugin();
 
 const appContentStyle = {
-	paddingLeft:256
+	paddingLeft: 256
 };
 
-const appContentBoxStyle= {
+const appContentBoxStyle = {
 	paddingLeft: '5%',
-	paddingRight: '5%'
+	paddingRight: '5%',
+	position: 'relative'
 };
 
 const App = React.createClass({
@@ -24,14 +25,16 @@ const App = React.createClass({
 			muiTheme: ThemeManager.getMuiTheme({
 				fontFamily: '"Helvetica Neue",Helvetica,Arial,STHeiti,"Microsoft Yahei",sans-serif',
 				fontSize: 14,
-				lineHeight:14
+				lineHeight: 14
 			})
 		};
 	},
-	render: function() {
+	render: function () {
 		return (
 			<div>
-				<LeftNavBar />
+				<LeftNavBar
+					user={this.props.route.user}
+					/>
 				<div style={appContentStyle}>
 					<div style={appContentBoxStyle}>
 						{this.props.children}
