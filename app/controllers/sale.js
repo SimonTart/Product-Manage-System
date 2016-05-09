@@ -3,6 +3,7 @@ let router = require('express').Router();
 let mongoose = require('mongoose');
 let SaleProduct = mongoose.model('SaleProduct');
 let SaleRecord = mongoose.model('SaleRecord');
+let Product = mongoose.model('Product');
 let async = require('async');
 
 module.exports = function (app) {
@@ -36,9 +37,9 @@ router.post('/', function (req, res) {
         });
         return;
     }
-    products = formateProducts(products);
+    let formatedProducts = formateProducts(products);
     let hasSaveSaleProductIds = [];
-    let saveTasks = products.map((product) => {
+    let saveTasks = formatedProducts.map((product) => {
         return function (callback) {
             new SaleProduct(product).save()
                 .then((saleProduct) => {
@@ -50,6 +51,7 @@ router.post('/', function (req, res) {
                 });
         }
     });
+
     async.parallel(saveTasks, function (err, results) {
         if (err) {
             console.error(err);
@@ -66,15 +68,9 @@ router.post('/', function (req, res) {
             saleUserId: req.session.user._id,
             saleProducts: results
         }
-
         new SaleRecord(newSaleRecord).save()
             .then((saleRecord) => {
-                res.json({
-                    statusCode: 0,
-                    resultCode: 0,
-                    message: '保存成功',
-                    id: saleRecord._id
-                });
+                modifyStoreNumber(products, saleRecord)
             })
             .catch((err) => {
                 console.error(err);
@@ -87,11 +83,62 @@ router.post('/', function (req, res) {
             });
     });
 
+    function modifyStoreNumber(products, saleRecord) {
+        let hasModifyProduct = [];
+        let modifyStoreNumberTasks = products.map((product) => {
+            return function (callback) {
+                Product.findOne({ _id: product._id })
+                    .update({
+                        $inc: {
+                            storeNumber: -product.num
+                        }
+                    }).exec()
+                    .then((modifyProduct) => {
+                        hasModifyProduct.push({
+                            id: product._id,
+                            num: product.num
+                        });
+                        callback(null, modifyProduct);
+                    })
+                    .catch((err) => {
+                        callback(err);
+                    })
+            }
+        });
 
+        async.parallel(modifyStoreNumberTasks, function (err, result) {
+            if (err) {
+                res.json({
+                    statusCode: -1,
+                    message: '保存失败',
+                    id: saleRecord._id
+                });
+            } else {
+                res.json({
+                    statusCode: 0,
+                    resultCode: 0,
+                    message: '保存成功',
+                    id: saleRecord._id
+                });
+                hasModifyProduct.forEach((product) => {
+                    Product.findOne({_id:product.id})
+                            .update({
+                                $inc:{
+                                    storeNumber: product.num
+                                }
+                            }).exec()
+                            .catch((err)=>{
+                                console.error(err);
+                            });
+                });
+            }
+        })
+    }
 });
 
 function formateProducts(products) {
     let needProperty = ['name', 'price', 'num'];
+    products = products.slice();
     return products.map(function (product) {
         var formateProduct = {};
         for (let i = 0; i < needProperty.length; i++) {

@@ -17,6 +17,7 @@ export default React.createClass({
 			<ListItem
 				leftIcon={<Description />}
 				primaryText = "报表"
+				containerElement={<Link to='/report' />}
 				style={{
 					display: isReport ? 'block' : 'none'
 				}}

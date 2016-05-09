@@ -2,9 +2,11 @@
 var router = require('express').Router();
 var async = require('async');
 var mongoose = require('mongoose');
+var async = require('async');
 
 var Order = mongoose.model('Order');
 var OrderProduct = mongoose.model('OrderProduct');
+var Product = mongoose.model('Product');
 
 
 module.exports = function (app) {
@@ -109,11 +111,7 @@ router.get('/:id/finish', function (req, res) {
         }
     }).exec()
         .then(function (order) {
-            res.json({
-                statusCode: 0,
-                resultCode:0,
-                message: '修改成功'
-            });
+            finishOrder(id, res)
         }).catch(function (err) {
             console.error(err);
             res.json({
@@ -122,6 +120,67 @@ router.get('/:id/finish', function (req, res) {
             });
         })
 });
+
+function finishOrder(id, res) {
+    let hasMergeProducts = [];
+    Order.findOne({ _id: id })
+        .populate('orderProducts')
+        .exec()
+        .then((order) => {
+            console.log(order);
+            return order.orderProducts || []
+        })
+        .then((products) => {
+            let MergeTasks = products.map((product) => {
+                return function (callback) {
+                    Product.findOne({ _id: product.productId })
+                        .update({ $inc: { storeNumber: product.num, totalNumber: product.num } })
+                        .exec()
+                        .then(() => {
+                            hasMergeProducts.push({
+                                id: product.productId,
+                                num: product.num
+                            });
+                            callback(null);
+                        })
+                        .catch((err) => {
+                            console.error(err);
+                            callback(err);
+                        })
+                }
+            });
+
+            async.parallel(MergeTasks, function (err) {
+                if (err) {
+                    console.error(err);
+                    res.json({
+                        statusCode: -1,
+                        message: '修改失败'
+                    });
+                    hasMergeProducts.forEach((product) => {
+                        Product.findOne({ _id: product.id })
+                            .update({ $inc: { storeNumber: -product.num, totalNumber: -product.num } })
+                            .catch((err) => {
+                                console.error(err);
+                            })
+                    })
+                } else {
+                    res.json({
+                        statusCode: 0,
+                        resultCode: 0,
+                        message: '修改成功'
+                    });
+                }
+            })
+        })
+        .catch((err) => {
+            console.error(err);
+            res.json({
+                statusCode: -1,
+                message: '修改失败'
+            });
+        });
+}
 
 router.get('/:id/delete', function (req, res) {
     if (req.session.user.authority.indexOf(13) === -1) {

@@ -16,7 +16,10 @@ import OrderProductEdit from './partial/order/orderProductEdit.jsx';
 import OrderList from './partial/order/orderList.jsx';
 import OrderDetail from './partial/order/orderDetail.jsx';
 import OrderEdit from './partial/order/orderEdit.jsx';
+import Report from './partial/report.jsx';
 import reqwest from 'reqwest';
+import ReportProductSaleRank from './partial/report/productSaleRank.jsx';
+import SaleIncomLine from './partial/report/saleIncomeLine.jsx';
 
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
@@ -61,6 +64,7 @@ const AppRouter = React.createClass({
 					<Route path="/user/detail/:id" component={UserDetail}/>
 					<Route path="/user/edit/:id" component={EditUser}/>
 					<Route path="/product/sale" component={ProductSale} />
+					<Route path="/product/add" component={AddProduct} />
 					<Route
 						path="/product/list"
 						authority={this.state.user.authority}
@@ -76,6 +80,9 @@ const AppRouter = React.createClass({
 					<Route path="/order/detail/:id" component={OrderDetail} />
 					<Route path="/order/edit/:id" component={OrderEdit} />
 					<Route path="/orderproduct/edit/:id" component={OrderProductEdit} />
+					<Route path="/report" component={Report}/>
+					<Route path="/report/product/sale/rank" component={ReportProductSaleRank} />
+					<Route path="/report/sale/income/line" component={SaleIncomLine} />
 				</Route>
 			</Router>
 
