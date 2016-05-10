@@ -19,6 +19,7 @@ router.post('/', function (req, res) {
         return;
     }
     let products = req.body.products;
+    let totalPrice = req.body.totalPrice;
     try {
         products = JSON.parse(products);
     } catch (err) {
@@ -66,7 +67,8 @@ router.post('/', function (req, res) {
 
         let newSaleRecord = {
             saleUserId: req.session.user._id,
-            saleProducts: results
+            saleProducts: results,
+            totalPrice: totalPrice
         }
         new SaleRecord(newSaleRecord).save()
             .then((saleRecord) => {
@@ -121,15 +123,15 @@ router.post('/', function (req, res) {
                     id: saleRecord._id
                 });
                 hasModifyProduct.forEach((product) => {
-                    Product.findOne({_id:product.id})
-                            .update({
-                                $inc:{
-                                    storeNumber: product.num
-                                }
-                            }).exec()
-                            .catch((err)=>{
-                                console.error(err);
-                            });
+                    Product.findOne({ _id: product.id })
+                        .update({
+                            $inc: {
+                                storeNumber: product.num
+                            }
+                        }).exec()
+                        .catch((err) => {
+                            console.error(err);
+                        });
                 });
             }
         })

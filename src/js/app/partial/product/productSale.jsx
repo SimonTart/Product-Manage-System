@@ -77,7 +77,8 @@ let SaleList = React.createClass({
             method: 'POST',
             type: 'json',
             data: {
-                products: JSON.stringify(this.props.products)
+                products: JSON.stringify(this.props.products),
+                totalPrice: this.getTotalMoney(this.props.products)
             }
         }).then((res) => {
             this.props.alertMessage(res.message);

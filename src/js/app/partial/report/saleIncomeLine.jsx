@@ -21,7 +21,7 @@ const birthdayTitle = { marginTop: 15 };
 export default React.createClass({
     getInitialState: function () {
         let beginDate = new Date();
-        beginDate.setFullYear(beginDate.getFullYear()-1);
+        beginDate.setFullYear(beginDate.getFullYear() - 1);
         beginDate.setHours(0);
         beginDate.setMinutes(0);
         beginDate.setSeconds(0);
@@ -41,7 +41,7 @@ export default React.createClass({
     loadData: function () {
         let myChart = this.myChart;
         reqwest({
-            url: '/api/report/salereord/income/lin',
+            url: '/api/report/sale/income/line',
             method: 'get',
             data: {
                 beginDate: this.state.beginDate.toString(),
@@ -55,8 +55,14 @@ export default React.createClass({
                 tooltip: {
                     trigger: 'item'
                 },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        magicType: { show: true, type: ['line', 'bar'] },
+                    }
+                },
                 xAxis: {
-                    data: res.names
+                    data: res.dates
                 },
                 yAxis: [{
                     type: 'value',
@@ -64,19 +70,19 @@ export default React.createClass({
                 }],
                 series: [{
                     name: '销量',
-                    type: 'bar',
-                    data: res.saleNumbers
+                    type: 'line',
+                    data: res.incomes
                 }],
                 dataZoom: [
                     {
                         show: true,
-                        start: 94,
+                        start: 0,
                         end: 100,
                         handleSize: 8
                     },
                     {
                         type: 'inside',
-                        start: 94,
+                        start: 0,
                         end: 100
                     },
                     {

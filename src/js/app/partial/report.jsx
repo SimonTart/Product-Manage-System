@@ -13,6 +13,11 @@ export default React.createClass({
                     label='商品销售排行表'
                     containerElement={<Link to='/report/product/sale/rank' />}
                     />
+                <RaisedButton
+                    label='营业额走线图'
+                    containerElement={<Link to='/report/sale/income/line' />}
+                    style={{ marginLeft: 35 }}
+                    />
             </div>
         );
     }
