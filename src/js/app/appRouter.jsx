@@ -20,6 +20,7 @@ import Report from './partial/report.jsx';
 import reqwest from 'reqwest';
 import ReportProductSaleRank from './partial/report/productSaleRank.jsx';
 import SaleIncomLine from './partial/report/saleIncomeLine.jsx';
+import passwordModify from './partial/user/passwordModify.jsx';
 
 
 const AppHistory = useRouterHistory(createHashHistory)({ queryKey: false });
@@ -61,6 +62,7 @@ const AppRouter = React.createClass({
 						path="/user/list"
 						authority={this.state.user.authority}
 						component={UserList}/>
+					<Route path="/user/password/modify" component={passwordModify}/>
 					<Route path="/user/detail/:id" component={UserDetail}/>
 					<Route path="/user/edit/:id" component={EditUser}/>
 					<Route path="/product/sale" component={ProductSale} />

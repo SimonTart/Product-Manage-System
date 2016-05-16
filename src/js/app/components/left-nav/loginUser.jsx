@@ -43,7 +43,7 @@ export default React.createClass({
 						primaryText="修改密码"
 						key={1}
 						leftIcon={<ModeEdit/>}
-						containerElement={<Link to={'/user/edit/' + this.props.userId} />}
+						containerElement={<Link to={'/user/password/modify'}/>}
 						/>,
 					<ListItem
 						primaryText="退出登录"
