@@ -8,4 +8,4 @@
 
 然后执行依次命令 `npm install`，`npm run build`
 
-最后运行MongoDB,然后执行命令`npm start`。
+最后运行MongoDB,然后执行命令`npm start`。然后用浏览器访问`localhost:300`
