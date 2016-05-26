@@ -80,15 +80,16 @@ router.get('/sale/income/line', function (req, res) {
         }
     ]).exec()
         .then((results) => {
-            // let dates = [];
-            // let incomes = [];
-            // results.forEach(function (res) {
-            //     dates.push(res.date);
-            //     incomes.push(res.totalIncome);
-            // });
-            var data = completeBlank(new Date(beginDate), new Date(endDate), results);
-            res.json(data);
-            
+            let dates = [];
+            let incomes = [];
+            results.forEach(function (res) {
+                dates.push(res.date);
+                incomes.push(res.totalIncome);
+            })
+            res.json({
+                dates: dates,
+                incomes: incomes
+            });
         }).catch((err) => {
             console.error(err);
             res.json({
@@ -117,36 +118,4 @@ router.get('/sale/income/line', function (req, res) {
 
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-function getFormatedDate(date) {
-    return date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate();
-}
-
-function completeBlank(beginDate, endDate, data) {
-    var time = beginDate.getTime();
-    var endTime = endDate.getTime();
-    var hasData = {};
-    var formatDate;
-    var dateArray = [];
-    var incomeArray = [];
-
-    data.forEach(function (el) {
-        hasData[el.date] = el.totalIncome;
-    });
-    while (endTime >time) {
-        formatDate = getFormatedDate(new Date(time));
-        time += (24 * 60 * 60 * 1000);
-        dateArray.push(formatDate);
-        if (hasData[formatDate]) {
-            incomeArray.push(hasData[formatDate]);
-        } else {
-            incomeArray.push(0);
-        }
-    }
-    return {
-        dates: dateArray,
-        incomes: incomeArray
-    }
-
 }

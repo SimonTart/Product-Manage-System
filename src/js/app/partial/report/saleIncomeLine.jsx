@@ -21,7 +21,7 @@ const birthdayTitle = { marginTop: 15 };
 export default React.createClass({
     getInitialState: function () {
         let beginDate = new Date();
-        beginDate.setFullYear(beginDate.getFullYear()-1);
+        beginDate.setFullYear(beginDate.getFullYear() - 1);
         beginDate.setHours(0);
         beginDate.setMinutes(0);
         beginDate.setSeconds(0);

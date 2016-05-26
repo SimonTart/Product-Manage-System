@@ -567,8 +567,6 @@ export default React.createClass({
     // },
     render: function () {
         const blockStyle = {
-            marginLeft: '-5%',
-            marginRight: '-5%',
             marginTop: 8,
             overflow: 'hidden'
         }

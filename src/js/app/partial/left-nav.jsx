@@ -10,7 +10,7 @@ import {Link} from 'react-router';
 
 export default React.createClass({
 	render: function () {
-		return (<LeftNav>
+		return (<LeftNav style={{width:245}}>
 			<LoginUser
 				userName={this.props.user.name}
 				userId={this.props.user._id}
@@ -29,4 +29,3 @@ export default React.createClass({
 		</LeftNav>);
 	}
 });
-

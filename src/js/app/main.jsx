@@ -7,12 +7,11 @@ import LeftNavBar from './partial/left-nav.jsx';
 injectTapEventPlugin();
 
 const appContentStyle = {
-	paddingLeft: 256
+	paddingLeft: 245
 };
 
 const appContentBoxStyle = {
-	paddingLeft: '5%',
-	paddingRight: '5%',
+	marginLeft:25,
 	position: 'relative'
 };
 

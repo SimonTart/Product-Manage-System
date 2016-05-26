@@ -58,6 +58,8 @@
   },
   "scripts": {
     "test": "webpack -w-d --colors --profile --progress --display-modules",
+    "build": "webpack -d --colors --profile --progress --display-modules",
+    "start": "node app.js",
     "dev": "gulp"
   },
   "repository": {
